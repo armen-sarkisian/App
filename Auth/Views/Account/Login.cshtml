@@ -1,0 +1,93 @@
+﻿@model Auth.ViewModels.LoginModel
+  
+<form method="post" action="~/Account/Login" asp-anti-forgery="true">
+        <div asp-validation-summary="ModelOnly" />
+        <div class="AuthForm">
+            <div class="form-group">
+                <label class="HeadSt">Вход на сайт</label> <br /> <br /> <br />
+                <label class="labelSt" asp-for="Email">Введите Email</label>
+                &emsp;&emsp;&ensp;
+                <input type="text" asp-for="Email" />
+                <span asp-validation-for="Email" />
+            </div>
+            <div class="form-group">
+                <label class="labelSt" asp-for="Password">Введите пароль</label>
+                &emsp;
+                <input asp-for="Password" />
+                <span asp-validation-for="Password" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Войти" class="btnInpSt" />
+            </div>
+        </div>
+    </form>
+
+    <style>
+
+        .AuthForm {
+            width: 400px;
+            background: #b8b6dd;
+            height: 210px;
+            border: solid 1px blue;
+            float: left;
+            position: relative;
+            top: 100px;
+            left: 200px;
+        }
+
+        .HeadSt {
+            position: absolute;
+            padding-left: 90px;
+            font-size: 28px;
+            color: #0094ff;
+        }
+
+        .bodySt {
+            position: center;
+            border-color: blue;
+            top: 100px;
+            left: 100px;
+        }
+
+        .textInpSt {
+            margin: 5px;
+            width: 350px;
+            height: 35px;
+            border-radius: 5px;
+            font-size: 27px;
+            color: #ff6a00;
+            border-color: rgba(233, 172, 97, 0.82);
+            border-style: double;
+        }
+
+        .labelSt {
+            margin: 0px;
+            padding-left: 10px;
+            font-size: 22px;
+            color: #0094ff;
+        }
+
+        .labelHeadSt {
+            margin: 10px;
+            font-size: 22px;
+            color: #ff6a00;
+        }
+
+        .btnInpSt {
+            position: absolute;
+            left: 280px;
+            margin: 0px;
+            width: 100px;
+            height: 40px;
+            font-size: 23px;
+            color: #0094ff;
+        }
+
+            .btnInpSt:hover {
+                background-color: #c5c7d0;
+            }
+
+            .btnInpSt:active {
+                background-color: #e2d0bb;
+            }
+    </style>

@@ -1,0 +1,59 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Блочная верстка в HTML5</title>
+ 
+</head>
+<body>
+  <div id="sidebar">
+     <form method="post" action="~/Account/Logout/">
+        @ViewData["User"]
+        <input type="submit" class="btnInpSt" value="Выход" />
+     </form>
+     <input type="submit" class="btnInpSt" value="Техподдержка" style="bottom: 35px" />
+     <input type="submit" class="btnInpSt" value="Настройки" style="bottom: 70px" />
+     <input type="submit" class="btnInpSt" value="Услуги" style="bottom: 105px" />
+     <input type="submit" class="btnInpSt" value="Добавить клиента" style="bottom: 140px" />
+  </div>
+  <div id="main">Основное содержимое</div>
+  <div id="footer">Футер</div>
+</body>
+</html>
+
+<style>
+    .btnInpSt {
+        width: 245px;
+        height: 30px;
+        font-size: 18px;
+        color: #0094ff;
+        position: absolute;
+        bottom: 0px;
+        left: 1px;
+    }
+
+    #sidebar {
+        background-color: #eee;
+        float: left;
+        width: 250px;
+        height: 90vh;
+        border: solid 1px black;
+        position: relative;
+    }
+
+    #main {
+        background-color: #eee;
+        height: 60vh;
+        width: 100vh;
+        margin-left: 180px;
+        border: solid 1px black;
+    }
+
+    #footer {
+        background-color: #eee;
+        margin-left: 180px;
+        height: 30vh;
+        width: 100vh;
+        border: solid 1px black;
+    }
+</style>
