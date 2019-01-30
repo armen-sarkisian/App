@@ -6,54 +6,68 @@
  
 </head>
 <body>
-  <div id="sidebar">
-     <form method="post" action="~/Account/Logout/">
-        @ViewData["User"]
-        <input type="submit" class="btnInpSt" value="Выход" />
-     </form>
-     <input type="submit" class="btnInpSt" value="Техподдержка" style="bottom: 35px" />
-     <input type="submit" class="btnInpSt" value="Настройки" style="bottom: 70px" />
-     <input type="submit" class="btnInpSt" value="Услуги" style="bottom: 105px" />
-     <input type="submit" class="btnInpSt" value="Добавить клиента" style="bottom: 140px" />
+    <div id="sidebar">
+        <form method="post" action="~/Account/Logout/">
+            @ViewData["User"]
+            <input type="submit" class="btnInpSt" value="Выход" />
+        </form>
+        <input type="submit" class="btnInpSt" value="Техподдержка" style="bottom: 40px" />
+        <input type="submit" class="btnInpSt" value="Настройки" style="bottom: 80px" />
+        <input type="submit" class="btnInpSt" value="Услуги" style="bottom: 120px" />
+        <input type="submit" class="btnInpSt" value="Добавить клиента" style="bottom: 160px" />
+        
+    </div>
+  <div id="main">
+      
   </div>
-  <div id="main">Основное содержимое</div>
-  <div id="footer">Футер</div>
+  <div id="footer">
+    <input type="submit" id="sendMsg" class="btnInpSt" value="Отправить уведомление в приложение" style="top: 3px" />
+  </div>
 </body>
 </html>
 
 <style>
     .btnInpSt {
-        width: 245px;
-        height: 30px;
+        width: 243px;
+        height: 35px;
         font-size: 18px;
         color: #0094ff;
         position: absolute;
         bottom: 0px;
-        left: 1px;
+        left: 2px;
     }
-
+    #sendMsg {
+        width: auto;
+        left: 5px;
+    }
     #sidebar {
         background-color: #eee;
         float: left;
         width: 250px;
-        height: 90vh;
+        height: 900px;
         border: solid 1px black;
-        position: relative;
+        position: absolute;
+        top: 30px;
+        left: 150px;
     }
-
+       
     #main {
         background-color: #eee;
-        height: 60vh;
-        width: 100vh;
-        margin-left: 180px;
+        height: 695px;
+        width: 1340px;
+        position: absolute;
         border: solid 1px black;
+        top: 30px;
+        left: 405px;
     }
 
     #footer {
         background-color: #eee;
-        margin-left: 180px;
-        height: 30vh;
-        width: 100vh;
+        position: absolute;
+        height: 200px;
+        width: 1340px;
         border: solid 1px black;
+        top: 730px;
+        left: 405px;
     }
 </style>

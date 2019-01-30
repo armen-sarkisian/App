@@ -15,7 +15,7 @@ namespace Auth.Controllers
         [Authorize]
         public IActionResult Index()
         {
-            ViewData["User"] =  "Вы вошли как: " + User.Identity.Name;
+            ViewData["User"] = "Вы вошли как: " + User.Identity.Name;
             return View();
         }
 
