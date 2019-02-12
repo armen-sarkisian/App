@@ -1,43 +1,59 @@
 ﻿@model Auth.ViewModels.LoginModel
   
 <form method="post" action="~/Account/Login" asp-anti-forgery="true">
-        <div asp-validation-summary="ModelOnly" />
-        <div class="AuthForm">
-            <div class="form-group">
-                <label class="HeadSt">Вход на сайт</label> <br /> <br /> <br />
-                <label class="labelSt" asp-for="Email">Введите Email</label>
-                &emsp;&emsp;&ensp;
-                <input type="text" asp-for="Email" />
-                <span asp-validation-for="Email" />
-            </div>
-            <div class="form-group">
-                <label class="labelSt" asp-for="Password">Введите пароль</label>
-                &emsp;
-                <input asp-for="Password" />
-                <span asp-validation-for="Password" />
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Войти" class="btnInpSt" />
-            </div>
+    <div asp-validation-summary="ModelOnly" />
+    <div class="AuthForm">
+        <div class="form-group">
+            <label class="HeadSt">Вход на сайт</label> <br /> <br /> <br />
+            <label class="labelSt" asp-for="Email">Введите логин</label>
+            &emsp;&emsp;&ensp;
+            <input class="input" type="text" asp-for="Email" />
+            <span asp-validation-for="Email" />
         </div>
-    </form>
+        <div class="form-group">
+            <label class="labelSt" asp-for="Password">Введите пароль</label>
+            &emsp;&nbsp;
+            <input class="input" asp-for="Password" />
+            <span asp-validation-for="Password" />
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Войти" class="btnInpSt" />
+        </div>
+    </div>
+    <input type="button" class="btnInpSt" id="admin" value="Кабинет администратора" style="top: 20px" onclick="window.location.href='@Url.Action("Home", "Admin")';" />
+</form>
 
     <style>
 
         .AuthForm {
-            width: 400px;
-            background: #b8b6dd;
+            width: 700px;
+            background: #ffffff;
             height: 210px;
-            border: solid 1px blue;
+            
             float: left;
             position: relative;
-            top: 100px;
-            left: 200px;
+            top: 270px;
+            left: 300px;
+        }
+
+        #admin {
+            left: 3vh;
+            width: auto;
+            height: auto;
+            font-size: 18px;
+            
+        }
+
+        .input {
+            border-color: #0094ff;
+            border-radius: 4px;
+            height: 30px;
+            width: 230px;
         }
 
         .HeadSt {
             position: absolute;
-            padding-left: 90px;
+            padding-left: 120px;
             font-size: 28px;
             color: #0094ff;
         }
@@ -75,7 +91,7 @@
 
         .btnInpSt {
             position: absolute;
-            left: 280px;
+            left: 340px;
             margin: 0px;
             width: 100px;
             height: 40px;

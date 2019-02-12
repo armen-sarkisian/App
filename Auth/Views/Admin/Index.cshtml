@@ -1,0 +1,41 @@
+﻿@model IEnumerable<Auth.Models.User>
+
+@{
+    ViewBag.Title = "Admin panel";
+}
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+<link href="~/Css/BootstrapTableCss.css" rel="stylesheet" />
+<h2>Зарегистрированные компании</h2>
+<div class="container">
+    <div class="row">
+
+        <div id="no-more-tables">
+            <table class="col-md-12 table-bordered table-striped table-condensed cf">
+                <thead class="cf">
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Id)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Login)
+                        </th>
+                    </tr>
+
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td data-title="#">
+                                @Html.DisplayFor(modelItem => item.Id)
+                            </td>
+                            <td data-title="Название компании">
+                                @Html.DisplayFor(modelItem => item.Login)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Auth.Models;
+using Auth.Service;
 using Auth.ViewModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -14,16 +15,12 @@ namespace Auth.Controllers
 {
     public class AccountController : Controller
     {
-        private UserContext db;
-
-        public AccountController(UserContext context)
-        {
-            db = context;
-        }
+        private ManagerAuth managerAuth = new ManagerAuth();
 
         [HttpGet]
         public IActionResult Login()
         {
+            
             return View();
         }
 
@@ -31,30 +28,40 @@ namespace Auth.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginModel model)
         {
+            
             if (ModelState.IsValid)
             {
-                User user = await db.Users.FirstOrDefaultAsync(u => u.Email == model.Email && u.Password == model.Password);
-                if (user != null)
-                {
-                    await Authenticate(model.Email); // аутентификация
-
-                    return RedirectToAction("Index", "Home");
-                }
-                ModelState.AddModelError("", "Некорректные логин и(или) пароль");
+                    if (model.Email == "admin" && model.Password == "admin") 
+                    {
+                        return RedirectToAction("Index", "Admin");
+                    }
+                    else
+                    {
+                        User user = await managerAuth.GetUserAsync(model.Email, model.Password);
+                            if (user != null)
+                                {
+                                    await Authenticate(model.Email); // аутентификация
+                                    return RedirectToAction("Index", "Home");
+                                }
+                    }
             }
+            else
+            {
+            ModelState.AddModelError("", "Некорректные логин и(или) пароль");
+            }
+            
             return View(model);
         }
 
         private async Task Authenticate(string userName)
         {
-            // создаем один claim
+            
             var claims = new List<Claim>
             {
                 new Claim(ClaimsIdentity.DefaultNameClaimType, userName)
             };
-            // создаем объект ClaimsIdentity
+           
             ClaimsIdentity id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
-            // установка аутентификационных куки
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));
         }
 

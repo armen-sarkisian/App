@@ -6,42 +6,43 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Auth.Models;
 using Microsoft.AspNetCore.Authorization;
+using Auth.Service;
 
 namespace Auth.Controllers
 {
     public class HomeController : Controller
     {
-        
+        ManagerAuth managerAuth = new ManagerAuth();
+        public string str { get; set; }
+        public string user { get; set; }
+
+
         [Authorize]
-        public IActionResult Index()
+        public IActionResult Index(string user)
         {
             ViewData["User"] = "Вы вошли как: " + User.Identity.Name;
-            return View();
+           return View();
         }
 
-        public IActionResult About()
+        public void OnPost(string name, int age)
         {
-            ViewData["Message"] = "Your application description page.";
-
-            return View();
+            user = $"Имя: {name}  Возраст: {age}";
         }
 
-        public IActionResult Contact()
-        {
-            ViewData["Message"] = "Your contact page.";
-
-            return View();
-        }
-
-        public IActionResult Privacy()
+        [HttpGet]
+        public IActionResult AddClient() 
         {
             return View();
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        [HttpPost]
+        public IActionResult AddClientBtn(string CompanyName, string OwnershipType, string Adress, string LegalAdress, int CheckingAccount, string BankBin, int UNP,
+            int OKPO, int ONPF, string FolderLanguage)
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            managerAuth.AddUserClientsInDb(CompanyName, OwnershipType, LegalAdress, Adress, CheckingAccount, BankBin, UNP, OKPO, ONPF, FolderLanguage);
+            return View("AddClient");
         }
+
+        
     }
 }
