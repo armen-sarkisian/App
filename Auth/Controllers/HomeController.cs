@@ -15,20 +15,26 @@ namespace Auth.Controllers
         ManagerAuth managerAuth = new ManagerAuth();
         public string str { get; set; }
         public string user { get; set; }
-
-
+       
+        
         [Authorize]
         public IActionResult Index(string user)
         {
-            ViewData["User"] = "Вы вошли как: " + User.Identity.Name;
-           return View();
+            
+            if (User.Identity.Name == "ad")
+            {
+                return RedirectToAction("Logout", "Account");
+                
+            }
+            else
+            {
+                ViewData["User"] = "Вы вошли как: " + User.Identity.Name;
+                
+            }
+            return View();
         }
 
-        public void OnPost(string name, int age)
-        {
-            user = $"Имя: {name}  Возраст: {age}";
-        }
-
+       
         [HttpGet]
         public IActionResult AddClient() 
         {

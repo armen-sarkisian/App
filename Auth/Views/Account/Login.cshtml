@@ -1,5 +1,5 @@
 ﻿@model Auth.ViewModels.LoginModel
-  
+
 <form method="post" action="~/Account/Login" asp-anti-forgery="true">
     <div asp-validation-summary="ModelOnly" />
     <div class="AuthForm">
@@ -19,91 +19,99 @@
         <div class="form-group">
             <input type="submit" value="Войти" class="btnInpSt" />
         </div>
+        @if (!ViewData.ModelState.IsValid && ViewData.ModelState["Error"].Errors.Count > 0)
+        {
+        
+            <div class="alert alert-danger" style="width: 330px;">
+                <strong>Ошибка:</strong>
+                @ViewData.ModelState["Error"].Errors.First().ErrorMessage
+            </div>
+        
+        }
     </div>
-    <input type="button" class="btnInpSt" id="admin" value="Кабинет администратора" style="top: 20px" onclick="window.location.href='@Url.Action("Home", "Admin")';" />
+   
 </form>
 
-    <style>
+<style>
 
-        .AuthForm {
-            width: 700px;
-            background: #ffffff;
-            height: 210px;
-            
-            float: left;
-            position: relative;
-            top: 270px;
-            left: 300px;
+    .AuthForm {
+        width: 700px;
+        background: #ffffff;
+        height: 210px;
+        float: left;
+        position: relative;
+        top: 270px;
+        left: 300px;
+    }
+
+
+    #admin {
+        left: 3vh;
+        width: auto;
+        height: auto;
+        font-size: 18px;
+    }
+
+    .input {
+        border-color: #0094ff;
+        border-radius: 4px;
+        height: 30px;
+        width: 230px;
+    }
+
+    .HeadSt {
+        position: absolute;
+        padding-left: 120px;
+        font-size: 28px;
+        color: #0094ff;
+    }
+
+    .bodySt {
+        position: center;
+        border-color: blue;
+        top: 100px;
+        left: 100px;
+    }
+
+    .textInpSt {
+        margin: 5px;
+        width: 350px;
+        height: 35px;
+        border-radius: 5px;
+        font-size: 27px;
+        color: #ff6a00;
+        border-color: rgba(233, 172, 97, 0.82);
+        border-style: double;
+    }
+
+    .labelSt {
+        margin: 0px;
+        padding-left: 10px;
+        font-size: 22px;
+        color: #0094ff;
+    }
+
+    .labelHeadSt {
+        margin: 10px;
+        font-size: 22px;
+        color: #ff6a00;
+    }
+
+    .btnInpSt {
+        position: absolute;
+        left: 340px;
+        margin: 0px;
+        width: 100px;
+        height: 40px;
+        font-size: 23px;
+        color: #0094ff;
+    }
+
+        .btnInpSt:hover {
+            background-color: #c5c7d0;
         }
 
-        #admin {
-            left: 3vh;
-            width: auto;
-            height: auto;
-            font-size: 18px;
-            
+        .btnInpSt:active {
+            background-color: #e2d0bb;
         }
-
-        .input {
-            border-color: #0094ff;
-            border-radius: 4px;
-            height: 30px;
-            width: 230px;
-        }
-
-        .HeadSt {
-            position: absolute;
-            padding-left: 120px;
-            font-size: 28px;
-            color: #0094ff;
-        }
-
-        .bodySt {
-            position: center;
-            border-color: blue;
-            top: 100px;
-            left: 100px;
-        }
-
-        .textInpSt {
-            margin: 5px;
-            width: 350px;
-            height: 35px;
-            border-radius: 5px;
-            font-size: 27px;
-            color: #ff6a00;
-            border-color: rgba(233, 172, 97, 0.82);
-            border-style: double;
-        }
-
-        .labelSt {
-            margin: 0px;
-            padding-left: 10px;
-            font-size: 22px;
-            color: #0094ff;
-        }
-
-        .labelHeadSt {
-            margin: 10px;
-            font-size: 22px;
-            color: #ff6a00;
-        }
-
-        .btnInpSt {
-            position: absolute;
-            left: 340px;
-            margin: 0px;
-            width: 100px;
-            height: 40px;
-            font-size: 23px;
-            color: #0094ff;
-        }
-
-            .btnInpSt:hover {
-                background-color: #c5c7d0;
-            }
-
-            .btnInpSt:active {
-                background-color: #e2d0bb;
-            }
-    </style>
+</style>

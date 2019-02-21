@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Auth.DAO.Model;
 using Auth.Models;
 using Auth.Service;
 using Auth.ViewModels;
@@ -16,7 +17,7 @@ namespace Auth.Controllers
     public class AccountController : Controller
     {
         private ManagerAuth managerAuth = new ManagerAuth();
-
+        
         [HttpGet]
         public IActionResult Login()
         {
@@ -24,32 +25,35 @@ namespace Auth.Controllers
             return View();
         }
 
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginModel model)
         {
-            
-            if (ModelState.IsValid)
+            if (ModelState.IsValid )
             {
-                    if (model.Email == "admin" && model.Password == "admin") 
+                if (model.Email == "ad" && model.Password == "ad")
+                {
+                   
+                    Admin admin = await managerAuth.GetUserAsyncAdmin(model.Email, model.Password);
+                    
+                    await Authenticate(model.Email);
+                    return RedirectToAction("Index", "Admin");
+                }
+                else
+                {
+                    User user = await managerAuth.GetUserAsync(model.Email, model.Password);
+                    if (user != null)
                     {
-                        return RedirectToAction("Index", "Admin");
+                        await Authenticate(model.Email); // аутентификация 
+                        return RedirectToAction("Index", "Home");
                     }
                     else
                     {
-                        User user = await managerAuth.GetUserAsync(model.Email, model.Password);
-                            if (user != null)
-                                {
-                                    await Authenticate(model.Email); // аутентификация
-                                    return RedirectToAction("Index", "Home");
-                                }
+                        ModelState.AddModelError("Error", "некорректные логин и(или) пароль");
                     }
+                }
             }
-            else
-            {
-            ModelState.AddModelError("", "Некорректные логин и(или) пароль");
-            }
-            
             return View(model);
         }
 

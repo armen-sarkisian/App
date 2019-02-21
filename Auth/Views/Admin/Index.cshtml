@@ -5,37 +5,177 @@
 }
 <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 <link href="~/Css/BootstrapTableCss.css" rel="stylesheet" />
-<h2>Зарегистрированные компании</h2>
-<div class="container">
-    <div class="row">
+<body>
+    <div id="head" >
+        <h2>Вы зашли в панель администратора</h2>
+        <h2>Ваши зарегистрированные компании:</h2>
+    </div>
 
-        <div id="no-more-tables">
-            <table class="col-md-12 table-bordered table-striped table-condensed cf">
-                <thead class="cf">
-                    <tr>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Id)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Login)
-                        </th>
-                    </tr>
-
-                </thead>
-                <tbody>
-                    @foreach (var item in Model)
-                    {
+    <div class="container, mainTable" id="mainForm">
+        <div class="row">
+            <div id="no-more-tables">
+                <table class="col-md-12 table-bordered table-striped table-condensed cf">
+                    <thead class="cf">
                         <tr>
-                            <td data-title="#">
-                                @Html.DisplayFor(modelItem => item.Id)
-                            </td>
-                            <td data-title="Название компании">
-                                @Html.DisplayFor(modelItem => item.Login)
-                            </td>
+                            <th class="idStyle">
+                                <h5>№</h5>
+                            </th>
+                            <th>
+                                <h5>Логин компании</h5>
+                            </th>
+                            <th>
+                                <h5>Пароль</h5>
+                            </th>
+                            <th>
+                                <h5>Дата добавления</h5>
+                            </th>
+
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @if (Model != null)
+                        {
+                            int a = 1;
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => a)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Login)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Password)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Date)
+                                    </td>
+                                    @using (Html.BeginForm("DeleteCompany", "Admin", FormMethod.Post, new { @id = "Form1" }))
+                                    {
+                                        <td style="border-color: white; background-color: white">
+                                            <form action="~/Admin/DeleteCompany/" method="post">
+                                                <button type="submit" class="deleteCompanyBtn" title="Удалить текущую компанию" name="Id" value="@item.Id"><img src="~/images/deleteImg.png" class="deleteCompanyBtn" /></button>
+                                            </form>
+                                        </td>
+                                    }
+                                </tr>
+                                a++;
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-</div>
+    <div id="buttonsBlock">
+        <div style="text-align:left;">
+            <input type="button" class="btnAdd" value="Добавить новую компанию" onclick="window.location.href='@Url.Action("AddNewCompany", "Admin")';" />
+        </div>
+    </div>
+
+    @using (Html.BeginForm("DeleteAllUsers", "Admin", FormMethod.Post, new { @id = "Form2" }))
+    {
+        <div id="buttonsBlock">
+            <div style="text-align:left;">
+                <form action="~/Admin/DeleteAllUsers/" method="post">
+                    <input type="submit" class="btnAdd" style="position: absolute; top: 60px" value="Удалить все компании" />
+                </form>
+            </div>
+        </div>
+    }
+    <div id="buttonsBlock">
+        <div style="text-align:left;">
+            <input type="button" class="btnAdd" style="position: absolute; top: 120px" value="Выход" onclick="window.location.href='@Url.Action("Logout", "Account")';" />
+        </div>
+    </div>
+
+
+</body>
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript">
+    $("body").on("submit", "#Form1", function () {
+        return confirm("Вы действительно хотите удалить компанию?");
+    });
+</script>
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript">
+    $("body").on("submit", "#Form2", function () {
+        return confirm("Вы действительно хотите удалить все компании?");
+    });
+</script>
+
+
+
+
+
+<style>
+    .idStyle {
+        width: 10px;
+    }
+
+    #head {
+        white-space: nowrap;
+        height: auto;
+        width: auto;
+        position: absolute;
+        top: 60px;
+        left: 735px;
+    }
+
+    #mainForm {
+        height: 395px;
+        width: 620px;
+        position: absolute;
+        top: 180px;
+        left: 735px;
+    }
+
+    #buttonsBlock {
+        position: absolute;
+        top: 240px;
+        width: 150px;
+        left: 550px;
+        float: left;
+    }
+
+    .deleteCompanyBtn {
+        background-image: url(/images/deleteImg.png);
+        background-color: transparent; /* make the button transparent */
+        background-repeat: no-repeat; /* make the background image appear only once */
+        background-position: 0px 0px; /* equivalent to 'top left' */
+        border: none; /* assuming we don't want any borders */
+        cursor: pointer; /* make the cursor like hovering over an <a> element */
+        height: 20px; /* make this the size of your image */
+        width: 20px; /* make this the size of your image */
+    }
+
+    .companyNameStyle {
+        width: 150px;
+    }
+
+    .mainTable {
+        position: absolute;
+        left: 600px;
+        top: 200px;
+        width: 300px;
+    }
+
+    .btnAdd {
+        white-space: normal;
+        width: 150px;
+        height: 50px;
+        font-size: 15px;
+        color: #0094ff;
+    }
+
+        .btnAdd:hover {
+            background-color: #c5c7d0;
+        }
+
+        .btnAdd:active {
+            background-color: #e2d0bb;
+        }
+</style>

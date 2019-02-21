@@ -1,0 +1,130 @@
+﻿@model IEnumerable<Auth.Models.User>
+
+@{
+    ViewBag.Title = "Admin panel";
+}
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+<link href="~/Css/BootstrapTableCss.css" rel="stylesheet" />
+<h2>@ViewData["AdminLogged"]</h2>
+<h2>Зарегистрированные компании</h2>
+<div class="container, mainTable">
+    <div class="row">
+        <div id="no-more-tables">
+            <table class="col-md-12 table-bordered table-striped table-condensed cf">
+                <thead class="cf">
+                    <tr>
+                        <th class="idStyle">
+                            <h5>№</h5>
+                        </th>
+                        <th>
+                            <h5>Логин компании</h5>
+                        </th>
+                        <th>
+                            <h5>Пароль</h5>
+                        </th>
+                        <th>
+                            <h5>Дата добавления</h5>
+                        </th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null)
+                    {
+                        int a = 1;
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => a)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Login)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Password)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Date)
+                                </td>
+                                <td>
+                                    <form action="~/Admin/DeleteCompany/" method="post">
+                                        <input type="submit" name="Login" value="@item.Login" />
+                                    </form>
+                                </td>
+                            </tr>
+                            a++;
+                        }
+
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<div id="buttonsBlock">
+    <div style="text-align:left;">
+        <input type="button" class="btnAdd" value="Добавить новую компанию" onclick="window.location.href='@Url.Action("AddNewCompany", "Admin")';" />
+    </div>
+</div>
+
+<div id="buttonsBlock">
+    <div style="text-align:left;">
+        <input type="button" class="btnAdd" style="position: absolute; top: 60px" value="Удалить компанию" onclick="window.location.href='@Url.Action("AddNewCompany", "Admin")';" />
+    </div>
+</div>
+
+<div id="buttonsBlock">
+    <div style="text-align:left;">
+        <input type="button" class="btnAdd" style="position: absolute; top: 120px" value="Удалить все компании" onclick="window.location.href='@Url.Action("DeleteAllUsers", "Admin")';" />
+    </div>
+</div>
+
+<div id="buttonsBlock">
+    <div style="text-align:left;">
+        <input type="button" class="btnAdd" style="position: absolute; top: 180px" value="Выход" onclick="window.location.href='@Url.Action("Logout", "Account")';" />
+    </div>
+</div>
+
+<style>
+    .idStyle {
+        width: 10px;
+    }
+
+    #buttonsBlock {
+        position: absolute;
+        top: 200px;
+        width: 150px;
+        left: 420px;
+        float: left;
+    }
+
+    .companyNameStyle {
+        width: 150px;
+    }
+
+    .mainTable {
+        position: absolute;
+        left: 600px;
+        top: 200px;
+        width: 300px;
+    }
+
+    .btnAdd {
+        white-space: normal;
+        width: 150px;
+        height: 50px;
+        font-size: 15px;
+        color: #0094ff;
+    }
+
+        .btnAdd:hover {
+            background-color: #c5c7d0;
+        }
+
+        .btnAdd:active {
+            background-color: #e2d0bb;
+        }
+</style>

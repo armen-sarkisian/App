@@ -21,9 +21,24 @@ namespace Auth.Service
             return await sqlCommand.GetUserInDb(login, password);
         }
 
+        public async Task<Admin> GetUserAsyncAdmin(string login, string password)
+        {
+            return await sqlCommand.GetUserInDbAdmin(login, password);
+        }
+
         public async Task<User> GetTotalUserAsync(int id)
         {
             return await sqlCommand.GetTotalUsersInDb(id);
+        }
+
+        public async void AddNewCompanyInDb(string Login, string Password)
+        {
+            User user = new User();
+            user.Login = Login;
+            user.Password = Password;
+            DateTime date = DateTime.Now;
+            user.Date = date.ToString();
+            sqlCommand.AddNewCompanyInDb(user);
         }
 
        
@@ -43,5 +58,26 @@ namespace Auth.Service
             userClients.FolderLanguage = FolderLanguage;
             sqlCommand.AddUserClientsInDb(userClients);
         }
+
+        public async void DeleteAllUsersManager()
+        {
+            sqlCommand.DeleteAllUsersCommand();
+        }
+
+        public async void DeleteCompanyManager(int Id)
+        {
+            sqlCommand.DeleteCompany(Id);
+        }
+
+        /*public async void DeleteTableManager()
+        {
+            sqlCommand.DeleteTable();
+        }*/
+
+        /*public async void CreateManager()
+        {
+            sqlCommand.Create();
+        }*/
+        
     }
 }

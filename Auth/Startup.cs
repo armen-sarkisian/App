@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Auth.Controllers;
+using Auth.DAO;
 using Auth.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
@@ -18,9 +20,16 @@ namespace Auth
 {
     public class Startup
     {
+        AccountController acc;
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            acc = new AccountController();
+            acc.Logout();
+            using (var client = new ContextAuth())
+            {
+                client.Database.EnsureCreated();
+            }
         }
 
         public IConfiguration Configuration { get; }
