@@ -24,12 +24,10 @@ namespace Auth.Controllers
             if (User.Identity.Name == "ad")
             {
                 return RedirectToAction("Logout", "Account");
-                
             }
             else
             {
                 ViewData["User"] = "Вы вошли как: " + User.Identity.Name;
-                
             }
             return View();
         }
@@ -45,7 +43,8 @@ namespace Auth.Controllers
         public IActionResult AddClientBtn(string CompanyName, string OwnershipType, string Adress, string LegalAdress, int CheckingAccount, string BankBin, int UNP,
             int OKPO, int ONPF, string FolderLanguage)
         {
-            managerAuth.AddUserClientsInDb(CompanyName, OwnershipType, LegalAdress, Adress, CheckingAccount, BankBin, UNP, OKPO, ONPF, FolderLanguage);
+            var parentCompany = User.Identity.Name;
+            managerAuth.AddUserClientsInDb(CompanyName, OwnershipType, LegalAdress, Adress, CheckingAccount, BankBin, UNP, OKPO, ONPF, FolderLanguage, parentCompany);
             return View("AddClient");
         }
 

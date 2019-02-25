@@ -31,19 +31,30 @@ namespace Auth.Service
             return await sqlCommand.GetTotalUsersInDb(id);
         }
 
-        public async void AddNewCompanyInDb(string Login, string Password)
+        public async void AddNewCompanyInDb(string Login, string Password, string CompanyName, string OwnershipType, string Adress, string LegalAdress, int CheckingAccount, string BankBin, int UNP,
+            int OKPO, int ONPF, string FolderLanguage)
         {
             User user = new User();
             user.Login = Login;
             user.Password = Password;
             DateTime date = DateTime.Now;
             user.Date = date.ToString();
+            user.Adress = Adress;
+            user.CompanyName = CompanyName;
+            user.OwnershipType = OwnershipType;
+            user.LegalAdress = LegalAdress;
+            user.CheckingAccount = CheckingAccount;
+            user.BankBin = BankBin;
+            user.UNP = UNP;
+            user.OKPO = OKPO;
+            user.ONPF = ONPF;
+            user.FolderLanguage = FolderLanguage;
             sqlCommand.AddNewCompanyInDb(user);
         }
 
        
         public async void AddUserClientsInDb(string CompanyName, string OwnershipType, string Adress, string LegalAdress, int CheckingAccount, string BankBin, int UNP,
-            int OKPO, int ONPF, string FolderLanguage)
+            int OKPO, int ONPF, string FolderLanguage, string ParentCompany)
         {
             UserClients userClients = new UserClients();
             userClients.Adress = Adress;
@@ -56,6 +67,7 @@ namespace Auth.Service
             userClients.OKPO = OKPO;
             userClients.ONPF = ONPF;
             userClients.FolderLanguage = FolderLanguage;
+            userClients.ParentCompany = ParentCompany;
             sqlCommand.AddUserClientsInDb(userClients);
         }
 
@@ -69,15 +81,9 @@ namespace Auth.Service
             sqlCommand.DeleteCompany(Id);
         }
 
-        /*public async void DeleteTableManager()
+        public async Task<User> GetCompanyInfoManager(string CompanyName)
         {
-            sqlCommand.DeleteTable();
-        }*/
-
-        /*public async void CreateManager()
-        {
-            sqlCommand.Create();
-        }*/
-        
+            return await sqlCommand.GetCompanyInfoInDb(CompanyName);
+        }
     }
 }

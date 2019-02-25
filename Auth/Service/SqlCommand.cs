@@ -63,11 +63,7 @@ namespace Auth.Service
 
         public async void DeleteCompany(int Id)
         {
-            /*
-            User user = new User { Login = s };
-            this.contextAuth.Users.Attach(user);
-            this.contextAuth.Entry(user).State = EntityState.Deleted;
-            */
+            
             var del = contextAuth.Users.SingleOrDefault(x => x.Id == Id);
             if (del!=null)
             {
@@ -79,16 +75,33 @@ namespace Auth.Service
 
         }
 
-        /*public async void DeleteTable()
+        public async Task<User> GetCompanyInfoInDb(string companyName)
         {
-            contextAuth.Database.ExecuteSqlCommand("drop table Users");
-            await contextAuth.SaveChangesAsync();
-        } */
-
-        /*public async void Create()
-        {
-            contextAuth.Database.EnsureCreated();
-            await contextAuth.SaveChangesAsync();
-        }*/
+            User user = new User();
+            foreach (var item in contextAuth.Users)
+            {
+                if (item.CompanyName == companyName)
+                {
+                    user.Id = item.Id;
+                    user.Login = item.Login;
+                    user.Password = item.Password;
+                    user.Date = item.Date;
+                    user.CompanyName = item.CompanyName;
+                    user.OwnershipType = item.OwnershipType;
+                    user.Adress = item.Adress;
+                    user.LegalAdress = item.LegalAdress;
+                    user.CheckingAccount = item.CheckingAccount;
+                    user.BankBin = item.BankBin;
+                    user.UNP = item.UNP;
+                    user.OKPO = item.OKPO;
+                    user.ONPF = item.ONPF;
+                    user.FolderLanguage = item.FolderLanguage;
+                    break;
+                }
+                
+            }
+            return user;
+        }
+       
     }
 }

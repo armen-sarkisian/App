@@ -1,0 +1,188 @@
+﻿@model IEnumerable<Auth.Models.User>
+
+@{
+    ViewBag.Title = "Edit company panel";
+}
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+<link href="~/Css/BootstrapTableCss.css" rel="stylesheet" />
+<body>
+    <div id="head">
+        <h2>Информация о компании</h2>
+    </div>
+
+    <div class="container, mainTable" id="mainForm">
+        <div class="row">
+            <div id="no-more-tables">
+                <table class="col-md-12 table-bordered table-striped table-condensed cf">
+                    <thead class="cf">
+                        <tr>
+                            <th>
+                                <h5>Логин компании</h5>
+                            </th>
+                            <th>
+                                <h5>Пароль</h5>
+                            </th>
+                            <th>
+                                <h5>Дата добавления</h5>
+                            </th>
+                            <th>
+                                <h5>Название компании</h5>
+                            </th>
+                            <th>
+                                <h5>Форма собственности</h5>
+                            </th>
+                            <th>
+                                <h5>Почтовый адрес</h5>
+                            </th>
+                            <th>
+                                <h5>Юридический адрес</h5>
+                            </th>
+                            <th>
+                                <h5>Рассчетный счет</h5>
+                            </th>
+                            <th>
+                                <h5>Банк бин</h5>
+                            </th>
+                            <th>
+                                <h5>УНП</h5>
+                            </th>
+                            <th>
+                                <h5>ОКПФ</h5>
+                            </th>
+                            <th>
+                                <h5>ОНПФ</h5>
+                            </th>
+                            <th>
+                                <h5>Язык отображения папок</h5>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null)
+                        {
+                            int a = 1;
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Login)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Password)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Date)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.CompanyName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.OwnershipType)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Adress)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.LegalAdress)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.CheckingAccount)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.BankBin)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.UNP)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.OKPO)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ONPF)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.FolderLanguage)
+                                    </td>
+                                </tr>
+
+                                a++;
+                            }
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+            <input type="button" class="btnAdd" style="margin-top: 40px; width: 200px;" value="Вернуться в панель администратора" onclick="window.location.href='@Url.Action("Index", "Admin")';" />
+        </div>
+    </div>
+</body>
+
+
+<style>
+    .idStyle {
+        width: 10px;
+    }
+
+    #head {
+        white-space: nowrap;
+        height: auto;
+        width: auto;
+        position: absolute;
+        top: 60px;
+        left: 635px;
+    }
+
+    #mainForm {
+        height: 395px;
+        width: 620px;
+        position: absolute;
+        top: 160px;
+        left: 400px;
+    }
+
+    #buttonsBlock {
+        position: absolute;
+        top: 240px;
+        width: 150px;
+        left: 350px;
+        float: left;
+    }
+
+    .deleteCompanyBtn {
+        background-image: url(/images/deleteImg.png);
+        background-color: transparent; /* make the button transparent */
+        background-repeat: no-repeat; /* make the background image appear only once */
+        background-position: 0px 0px; /* equivalent to 'top left' */
+        border: none; /* assuming we don't want any borders */
+        cursor: pointer; /* make the cursor like hovering over an <a> element */
+        height: 20px; /* make this the size of your image */
+        width: 20px; /* make this the size of your image */
+    }
+
+    .companyNameStyle {
+        width: 150px;
+    }
+
+    .mainTable {
+        position: absolute;
+        left: 400px;
+        top: 200px;
+        width: 300px;
+    }
+
+    .btnAdd {
+        white-space: normal;
+        width: 150px;
+        height: 50px;
+        font-size: 15px;
+        color: #0094ff;
+    }
+
+        .btnAdd:hover {
+            background-color: #c5c7d0;
+        }
+
+        .btnAdd:active {
+            background-color: #e2d0bb;
+        }
+</style>

@@ -20,5 +20,6 @@ namespace Auth.Models
         public int OKPO { get; set; }
         public int ONPF { get; set; }
         public string FolderLanguage { get; set; }
+        public string ParentCompany { get; set; }
     }
 }

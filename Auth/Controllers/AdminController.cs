@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Auth.DAO;
 using Auth.Models;
 using Auth.Service;
@@ -15,6 +16,8 @@ namespace Auth.Controllers
         private ManagerAuth managerAuth = new ManagerAuth();
         private ContextAuth db = new ContextAuth();
         List<User> displayUsers;
+        List<User> newUsers;
+        List<User> list = new List<User>();
 
         [HttpGet]
         public IActionResult Login()
@@ -45,15 +48,29 @@ namespace Auth.Controllers
         [Authorize]
         public IActionResult Index()
         {
-            //ViewData["AdminLogged"] = "Вы вошли как администратор";
-
             displayUsers = db.Users.ToList();
-
             return View(displayUsers);
-
         }
-        
-       
+
+        [HttpGet]
+        public IActionResult GetCompanyInfo()
+        {
+            //newUsers = db.Users.ToList(); // здесь сделать так, чтобы выбирались значения одной строки по ключу - компании. Нужно передать в sql.command компанию,
+            //а там проверкой выбрать все элементы строки этой компании и добавить их в список либо в объект User, затем этот объект либо список вернуть сюда и передать на View.
+
+            return View(list.ToList());
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> GetCompanyInfo(string CompanyName)
+        {
+            //ViewData["CompanyName"] = CompanyName;
+            User user = await managerAuth.GetCompanyInfoManager(CompanyName);
+            list.Add(user);
+
+            return View(list.ToList());
+        }
 
         [HttpGet]
         public IActionResult AddNewCompany()
@@ -63,7 +80,8 @@ namespace Auth.Controllers
 
         [HttpPost]
         
-        public IActionResult AddNewCompany(User user, string Login, string Password)
+        public IActionResult AddNewCompany(User user, string Login, string Password, string CompanyName, string OwnershipType, string Adress, string LegalAdress, int CheckingAccount, string BankBin, int UNP,
+            int OKPO, int ONPF, string FolderLanguage)
         {
             
             if (string.IsNullOrEmpty(user.Login) || string.IsNullOrEmpty(user.Password))
@@ -74,12 +92,14 @@ namespace Auth.Controllers
             {
                 ModelState.AddModelError("Login", "Логин и/или пароль должны быть от 5 до 15 символов");
             }
+           
             if (ModelState.IsValid)
             {
-                managerAuth.AddNewCompanyInDb(Login, Password);
+                managerAuth.AddNewCompanyInDb(Login, Password, CompanyName, OwnershipType, LegalAdress, Adress, CheckingAccount, BankBin, UNP, OKPO, ONPF, FolderLanguage);
                 ViewData["Successfull"] = "Компания успешно сохранена!";
-            }   return View("AddNewCompany");
-
+            }
+            else { ViewData["Successfull"] = "Ошибка"; }
+            return View("AddNewCompany");
         }
 
         [HttpPost]
