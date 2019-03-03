@@ -6,6 +6,7 @@ namespace Auth.DAO
     public class ContextAuth : DbContext
     { 
         public DbSet<User> Users { get; set; }
+        public DbSet<UsersArchive> UsersArchive { get; set; }
         public DbSet<UserClients> UserClients { get; set; }
         public DbSet<Admin> Admin{ get; set; }
 

@@ -1,17 +1,16 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Auth.Models
+namespace Auth.DAO.Model
 {
-    public class UserClients
+    public class UsersArchive
     {
         public int Id { get; set; }
         public string Login { get; set; }
         public string Password { get; set; }
+        public string Archived { get; set; }
         public string CompanyName { get; set; }
         public string OwnershipType { get; set; }
         public string Adress { get; set; }
@@ -22,6 +21,5 @@ namespace Auth.Models
         public int OKPO { get; set; }
         public int ONPF { get; set; }
         public string FolderLanguage { get; set; }
-        public string ParentCompany { get; set; }
     }
 }

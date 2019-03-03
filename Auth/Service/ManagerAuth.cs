@@ -16,6 +16,11 @@ namespace Auth.Service
             sqlCommand = new SqlCommand();
         }
 
+        public async Task<User> GetUserNameForViewManager(string login)
+        {
+            return await sqlCommand.GetUserNameForView(login);
+        }
+
         public async Task<User> GetUserAsync(string login, string password)
         {
             return await sqlCommand.GetUserInDb(login, password);
@@ -71,6 +76,18 @@ namespace Auth.Service
             sqlCommand.AddUserClientsInDb(userClients);
         }
 
+
+        public async Task<UsersArchive> GetUserForArchivingManager(int id)
+        {
+           return await sqlCommand.GetUserForArchiving(id);
+        }
+
+        public async void AddCompanyToArchiveManager(UsersArchive usersArchive)
+        {
+            sqlCommand.AddCompanyToArchive(usersArchive);
+        }
+
+
         public async void DeleteAllUsersManager()
         {
             sqlCommand.DeleteAllUsersCommand();
@@ -84,6 +101,22 @@ namespace Auth.Service
         public async Task<User> GetCompanyInfoManager(string CompanyName)
         {
             return await sqlCommand.GetCompanyInfoInDb(CompanyName);
+        }
+
+        public async Task<User> CompanyIsExistsManager(string Login, string Password)
+        {
+            return await sqlCommand.CompanyIsExists(Login, Password);
+        }
+
+        public async Task<UserClients> CompanyClientIsExistsManager(string Login, string Password)
+        {
+            return await sqlCommand.CompanyClientIsExists(Login, Password);
+        }
+
+
+        public async Task<String> isBookKeepingCompanyManager(string Login)
+        {
+            return await sqlCommand.isBookKeepingCompany(Login);
         }
     }
 }

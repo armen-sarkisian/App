@@ -2,13 +2,8 @@
 
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8">
-    <title>Блочная верстка в HTML5</title>
 
-</head>
 <body>
-    <div id="sidebar">
         <div class="aaa">
             @ViewData["User"]
         </div>
@@ -18,7 +13,7 @@
                 <div class="row">
                     <div id="no-more-tables">
                         <table class="col-md-12 table-bordered table-condensed cf">
-                            
+
                             <tbody>
                                 @if (Model != null)
                                 {
@@ -31,7 +26,7 @@
                                             </td>
                                             <td>
                                                 @Html.DisplayFor(modelItem => item.CompanyName)
-                                            </tr>
+                                        </tr>
                                         a++;
                                     }
                                 }
@@ -45,21 +40,7 @@
         <form method="post" action="~/Account/Logout/">
             <input type="submit" class="btnInpSt" value="Выход" />
         </form>
-        <input type="submit" class="btnInpSt" value="Техподдержка" style="bottom: 40px" />
-        <input type="submit" class="btnInpSt" value="Настройки" style="bottom: 80px" />
-        <input type="submit" class="btnInpSt" value="Услуги" style="bottom: 120px" />
-        <input type="submit" class="btnInpSt" value="Акции" style="bottom: 160px" />
-        <input type="button" class="btnInpSt" value="Добавить клиента" style="bottom: 200px" onclick="window.location.href='@Url.Action("AddClient", "Home")';" />
-
-    </div>
-    <div id="main">
-
-    </div>
-    <div id="footer">
-        <input type="submit" id="sendMsg" class="btnInpSt top" value="Отправить уведомление в приложение" />
-        <input type="submit" id="cash" class="btnInpSt top" value="Зарплата" />
-        <input type="submit" id="cash" class="btnInpSt top" value="Налоги" style="left: 455px" />
-    </div>
+        
 </body>
 </html>
 

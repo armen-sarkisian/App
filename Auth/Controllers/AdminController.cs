@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Auth.DAO;
+using Auth.DAO.Model;
 using Auth.Models;
 using Auth.Service;
 using Microsoft.AspNetCore.Authorization;
@@ -18,6 +19,7 @@ namespace Auth.Controllers
         List<User> displayUsers;
         List<User> newUsers;
         List<User> list = new List<User>();
+        UsersArchive usersArchive;
 
         [HttpGet]
         public IActionResult Login()
@@ -53,11 +55,9 @@ namespace Auth.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public IActionResult GetCompanyInfo()
         {
-            //newUsers = db.Users.ToList(); // здесь сделать так, чтобы выбирались значения одной строки по ключу - компании. Нужно передать в sql.command компанию,
-            //а там проверкой выбрать все элементы строки этой компании и добавить их в список либо в объект User, затем этот объект либо список вернуть сюда и передать на View.
-
             return View(list.ToList());
         }
 
@@ -65,7 +65,6 @@ namespace Auth.Controllers
         [HttpPost]
         public async Task<IActionResult> GetCompanyInfo(string CompanyName)
         {
-            //ViewData["CompanyName"] = CompanyName;
             User user = await managerAuth.GetCompanyInfoManager(CompanyName);
             list.Add(user);
 
@@ -73,17 +72,18 @@ namespace Auth.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public IActionResult AddNewCompany()
         {
             return View("AddNewCompany");
         }
 
         [HttpPost]
-        
+
         public IActionResult AddNewCompany(User user, string Login, string Password, string CompanyName, string OwnershipType, string Adress, string LegalAdress, int CheckingAccount, string BankBin, int UNP,
             int OKPO, int ONPF, string FolderLanguage)
         {
-            
+
             if (string.IsNullOrEmpty(user.Login) || string.IsNullOrEmpty(user.Password))
             {
                 ModelState.AddModelError("Login", "Вы не ввели поле");
@@ -92,7 +92,7 @@ namespace Auth.Controllers
             {
                 ModelState.AddModelError("Login", "Логин и/или пароль должны быть от 5 до 15 символов");
             }
-           
+
             if (ModelState.IsValid)
             {
                 managerAuth.AddNewCompanyInDb(Login, Password, CompanyName, OwnershipType, LegalAdress, Adress, CheckingAccount, BankBin, UNP, OKPO, ONPF, FolderLanguage);
@@ -110,14 +110,35 @@ namespace Auth.Controllers
             //return View("Index");
         }
 
-        
+
         [HttpPost]
-        public IActionResult DeleteCompany(int Id, string submit)
+        public async Task<IActionResult> DeleteCompany(int id)
         {
-            managerAuth.DeleteCompanyManager(Id);
+            //managerAuth.DeleteCompanyManager(Id);
             //ViewBag.Message = "Form submitted.";
+
+            usersArchive = new UsersArchive();
+            usersArchive = await managerAuth.GetUserForArchivingManager(id);
+            managerAuth.AddCompanyToArchiveManager(usersArchive);
+            managerAuth.DeleteCompanyManager(id);
+
+
             return RedirectToAction("Index", "Admin");
         }
 
+        public void Arhive(int id)
+        {
+
+        }
+
+        /*[HttpPost]
+        public async Task<IActionResult> Archiving(int Id)
+        {
+            usersArchive = new UsersArchive();
+            usersArchive = await managerAuth.GetUserForArchivingManager(Id);
+            managerAuth.AddCompanyToArchiveManager(usersArchive);
+            managerAuth.DeleteCompanyManager(Id);
+            return RedirectToAction("Index", "Admin");
+        }*/
     }
 }

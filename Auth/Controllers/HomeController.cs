@@ -7,33 +7,44 @@ using Microsoft.AspNetCore.Mvc;
 using Auth.Models;
 using Microsoft.AspNetCore.Authorization;
 using Auth.Service;
+using Auth.DAO;
 
 namespace Auth.Controllers
 {
     public class HomeController : Controller
     {
         ManagerAuth managerAuth = new ManagerAuth();
+        private ContextAuth db = new ContextAuth();
         public string str { get; set; }
         public string user { get; set; }
-       
+        List<UserClients> userClients = new List<UserClients>();
+        
         
         [Authorize]
-        public IActionResult Index(string user)
+        public async Task <IActionResult> Index()
         {
-            
-            if (User.Identity.Name == "ad")
+            string name = await managerAuth.isBookKeepingCompanyManager(User.Identity.Name);
+            if (User.Identity.Name == "admin")
             {
                 return RedirectToAction("Logout", "Account");
             }
+            else if (User.Identity.Name == name) 
+            {
+                return RedirectToAction("AdminPanel", "BookKeepingCompany");
+            }
             else
             {
-                ViewData["User"] = "Вы вошли как: " + User.Identity.Name;
+                //string nameForView = await GetUserNameForView();
+                //ViewData["User"] = "Вы вошли как: " + nameForView;
+                userClients = db.UserClients.ToList();
             }
-            return View();
+            return View(userClients);
         }
 
+        
        
         [HttpGet]
+        [Authorize]
         public IActionResult AddClient() 
         {
             return View();

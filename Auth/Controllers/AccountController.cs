@@ -17,6 +17,7 @@ namespace Auth.Controllers
     public class AccountController : Controller
     {
         private ManagerAuth managerAuth = new ManagerAuth();
+        List<User> list = new List<User>();
         
         [HttpGet]
         public IActionResult Login()
@@ -30,20 +31,24 @@ namespace Auth.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginModel model)
         {
-            if (ModelState.IsValid )
+            if (ModelState.IsValid)
             {
-                if (model.Email == "ad" && model.Password == "ad")
+                if (!(string.IsNullOrWhiteSpace(model.Email) || string.IsNullOrWhiteSpace(model.Password)))
                 {
-                   
-                    Admin admin = await managerAuth.GetUserAsyncAdmin(model.Email, model.Password);
-                    
-                    await Authenticate(model.Email);
-                    return RedirectToAction("Index", "Admin");
-                }
-                else
-                {
-                    User user = await managerAuth.GetUserAsync(model.Email, model.Password);
-                    if (user != null)
+                    User user = await managerAuth.CompanyIsExistsManager(model.Email, model.Password);
+                    UserClients userClients = await managerAuth.CompanyClientIsExistsManager(model.Email, model.Password);
+                    if (model.Email == "admin" && model.Password == "admin")
+                    {
+                        Admin admin = await managerAuth.GetUserAsyncAdmin(model.Email, model.Password);
+                        await Authenticate(model.Email);
+                        return RedirectToAction("Index", "Admin");
+                    }
+                    else if (model.Email == user.Login && model.Password == user.Password)
+                    {
+                        await Authenticate(model.Email); // аутентификация 
+                        return RedirectToAction("AdminPanel", "BookKeepingCompany");
+                    }
+                    else if (model.Email == userClients.Login && model.Password == userClients.Password)
                     {
                         await Authenticate(model.Email); // аутентификация 
                         return RedirectToAction("Index", "Home");
@@ -53,6 +58,10 @@ namespace Auth.Controllers
                         ModelState.AddModelError("Error", "некорректные логин и(или) пароль");
                     }
                 }
+            }
+            else
+            {
+                ModelState.AddModelError("Error", "Вы не ввели логин и(или) пароль");
             }
             return View(model);
         }

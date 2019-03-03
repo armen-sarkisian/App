@@ -9,39 +9,44 @@
 </head>
 <body>
     <div id="sidebar">
-        <form action="AddClientBtn" method="post">
-            <ol>
-                <li><p><input type="text" name="CompanyName" placeholder="Введите название компании" size="28" /></p></li>
-                <li>
-                    <p>
-                        <select name="OwnershipType">
-                            <option disabled>Укажите форму собственности</option>
-                            <option>ООО</option>
-                            <option>ОАО</option>
-                            <option>ЗАО</option>
-                        </select>
-                    </p>
-                </li>
-                <li><p><input type="text" name="Adress" placeholder="Укажите почтовый адрес" size="28" /></p></li>
-                <li><p><input type="text" name="LegalAdress" placeholder="Укажите юридический адрес" size="28" /></p></li>
-                <li><p><input type="text" name="CheckingAccount" placeholder="Введите рассчетный счет" size="28" /></p></li>
-                <li><p><input type="text" name="BankBin" placeholder="Укажите банк бин" size="28" /></p></li>
-                <li><p><input type="text" name="UNP" placeholder="Введите УНП" size="28" /></p></li>
-                <li><p><input type="text" name="OKPO" placeholder="Введите ОКПО" size="28" /></p></li>
-                <li><p><input type="text" name="ONPF" placeholder="Введите ОНПФ" size="28" /></p></li>
-                <li>
-                    <p>
-                        <select name="FolderLanguage">
-                            <option disabled>Выберите язык отображения папок</option>
-                            <option>Русский</option>
-                            <option>Украинский</option>
-                            <option>Белорусский</option>
-                        </select>
-                    </p>
-                </li>
-            </ol>
-            <input type="submit" value="submit" />
-        </form>
+        <div style="margin-top: 40px">
+            <form action="AddClientBtn" method="post">
+                <ol>
+                    <li><p><input type="text" name="CompanyName" placeholder="Введите название компании" size="28" /></p></li>
+                    <li>
+                        <p>
+                            <select name="OwnershipType">
+                                <option disabled>Укажите форму собственности</option>
+                                <option>ООО</option>
+                                <option>ОАО</option>
+                                <option>ЗАО</option>
+                            </select>
+                        </p>
+                    </li>
+                    <li><p><input type="text" name="Adress" placeholder="Укажите почтовый адрес" size="28" /></p></li>
+                    <li><p><input type="text" name="LegalAdress" placeholder="Укажите юридический адрес" size="28" /></p></li>
+                    <li><p><input type="text" name="CheckingAccount" placeholder="Введите рассчетный счет" size="28" /></p></li>
+                    <li><p><input type="text" name="BankBin" placeholder="Укажите банк бин" size="28" /></p></li>
+                    <li><p><input type="text" name="UNP" placeholder="Введите УНП" size="28" /></p></li>
+                    <li><p><input type="text" name="OKPO" placeholder="Введите ОКПО" size="28" /></p></li>
+                    <li><p><input type="text" name="ONPF" placeholder="Введите ОНПФ" size="28" /></p></li>
+                    <li>
+                        <p>
+                            <select name="FolderLanguage">
+                                <option disabled>Выберите язык отображения папок</option>
+                                <option>Русский</option>
+                                <option>Украинский</option>
+                                <option>Белорусский</option>
+                            </select>
+                        </p>
+                    </li>
+                </ol>
+                <div class="btnAdd" style="margin-top: 20px; display: flex; ">
+                    <input type="button" width: 100px" style="margin-left: 20px; white-space: normal" value="Вернуться в панель администратора" onclick="window.location.href='@Url.Action("Index", "Home")';" />
+                    <input type="submit" style="margin-left: 10px; height: 30px;" value="Добавить" />
+                </div>
+            </form>
+        </div>
      </div>
     <div id="main">
 
@@ -59,6 +64,13 @@
         position: absolute;
         bottom: 0px;
         left: 2px;
+    }
+
+    .btnAdd {
+        width: 150px;
+        height: auto;
+        font-size: 15px;
+        color: #0094ff;
     }
     
     #sidebar {
