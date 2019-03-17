@@ -22,7 +22,6 @@ namespace Auth.Controllers
         [HttpGet]
         public IActionResult Login()
         {
-            
             return View();
         }
 
@@ -35,8 +34,8 @@ namespace Auth.Controllers
             {
                 if (!(string.IsNullOrWhiteSpace(model.Email) || string.IsNullOrWhiteSpace(model.Password)))
                 {
-                    User user = await managerAuth.CompanyIsExistsManager(model.Email, model.Password);
-                    UserClients userClients = await managerAuth.CompanyClientIsExistsManager(model.Email, model.Password);
+                    User user = await managerAuth.GetCompanyManager(model.Email, model.Password);
+                    UserClients userClients = await managerAuth.GetCompanyClientManager(model.Email, model.Password);
                     if (model.Email == "admin" && model.Password == "admin")
                     {
                         Admin admin = await managerAuth.GetUserAsyncAdmin(model.Email, model.Password);
@@ -45,13 +44,29 @@ namespace Auth.Controllers
                     }
                     else if (model.Email == user.Login && model.Password == user.Password)
                     {
-                        await Authenticate(model.Email); // аутентификация 
-                        return RedirectToAction("AdminPanel", "BookKeepingCompany");
+                        bool flag = await managerAuth.isArchivedManager(model.Email, model.Password);
+                        if (flag == false)
+                        {
+                            await Authenticate(model.Email); // аутентификация 
+                            return RedirectToAction("AdminPanel", "BookKeepingCompany");
+                        }
+                        else
+                        {
+                            ModelState.AddModelError("Error", "Доступ в панель администратора запрещен.");
+                        }
                     }
                     else if (model.Email == userClients.Login && model.Password == userClients.Password)
                     {
-                        await Authenticate(model.Email); // аутентификация 
-                        return RedirectToAction("Index", "Home");
+                        bool flag = await managerAuth.isArchivedUserClientsManager(model.Email, model.Password);
+                        if (flag == false)
+                        {
+                            await Authenticate(model.Email); // аутентификация 
+                            return RedirectToAction("Index", "Home");
+                        }
+                        else
+                        {
+                            ModelState.AddModelError("Error", "Вход запрещен администратором.");
+                        }
                     }
                     else
                     {

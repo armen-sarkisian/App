@@ -36,8 +36,8 @@ namespace Auth.Service
             return await sqlCommand.GetTotalUsersInDb(id);
         }
 
-        public async void AddNewCompanyInDb(string Login, string Password, string CompanyName, string OwnershipType, string Adress, string LegalAdress, int CheckingAccount, string BankBin, int UNP,
-            int OKPO, int ONPF, string FolderLanguage)
+        public async void AddNewCompanyInDb(string Login, string Password, string CompanyName, string OwnershipType, string Adress, string LegalAdress, string CheckingAccount, string BankName, string BankBin, string UNP,
+            string OKPO, string ONPF, string FolderLanguage)
         {
             User user = new User();
             user.Login = Login;
@@ -45,10 +45,11 @@ namespace Auth.Service
             DateTime date = DateTime.Now;
             user.Date = date.ToString();
             user.Adress = Adress;
-            user.CompanyName = CompanyName;
+            user.CompanyName = OwnershipType + " «" + CompanyName + "»";
             user.OwnershipType = OwnershipType;
             user.LegalAdress = LegalAdress;
             user.CheckingAccount = CheckingAccount;
+            user.BankName = BankName;
             user.BankBin = BankBin;
             user.UNP = UNP;
             user.OKPO = OKPO;
@@ -57,9 +58,32 @@ namespace Auth.Service
             sqlCommand.AddNewCompanyInDb(user);
         }
 
-       
-        public async void AddUserClientsInDb(string CompanyName, string OwnershipType, string Adress, string LegalAdress, int CheckingAccount, string BankBin, int UNP,
-            int OKPO, int ONPF, string FolderLanguage, string ParentCompany)
+        public async void AddNewClientInDb(string Login, string Password, string CompanyName, string OwnershipType, string Adress, string LegalAdress, string CheckingAccount, string BankName, string BankBin, string UNP,
+            string OKPO, string ONPF, string FolderLanguage, string ParentCompany)
+        {
+            UserClients userClients = new UserClients();
+            userClients.Login = Login;
+            userClients.Password = Password;
+            DateTime date = DateTime.Now;
+            userClients.Date = date.ToString();
+            userClients.Adress = Adress;
+            userClients.CompanyName = OwnershipType + " «" + CompanyName + "»";
+            userClients.OwnershipType = OwnershipType;
+            userClients.LegalAdress = LegalAdress;
+            userClients.CheckingAccount = CheckingAccount;
+            userClients.BankName = BankName;
+            userClients.BankBin = BankBin;
+            userClients.UNP = UNP;
+            userClients.OKPO = OKPO;
+            userClients.ONPF = ONPF;
+            userClients.FolderLanguage = FolderLanguage;
+            userClients.ParentCompany = ParentCompany;
+            sqlCommand.AddNewClientsInDb(userClients);
+        }
+
+
+        /*public async void AddUserClientsInDb(string CompanyName, string OwnershipType, string Adress, string LegalAdress, string CheckingAccount, string BankBin, string UNP,
+            string OKPO, string ONPF, string FolderLanguage, string ParentCompany)
         {
             UserClients userClients = new UserClients();
             userClients.Adress = Adress;
@@ -74,19 +98,24 @@ namespace Auth.Service
             userClients.FolderLanguage = FolderLanguage;
             userClients.ParentCompany = ParentCompany;
             sqlCommand.AddUserClientsInDb(userClients);
-        }
+        }*/
 
 
-        public async Task<UsersArchive> GetUserForArchivingManager(int id)
+        public List<UserClients> CompareToParentCompanyManager(string AuthorizedName)
         {
-           return await sqlCommand.GetUserForArchiving(id);
+           return sqlCommand.CompareToParentCompany(AuthorizedName);
         }
 
-        public async void AddCompanyToArchiveManager(UsersArchive usersArchive)
+
+        public async void ArchivingUnarchivingManager(int id)
         {
-            sqlCommand.AddCompanyToArchive(usersArchive);
+            sqlCommand.ArchivingUnarchiving(id);
         }
 
+        public async void ArchivingUnarchivingUserClientsManager(int id)
+        {
+            sqlCommand.ArchivingUnarchivingUserClients(id);
+        }
 
         public async void DeleteAllUsersManager()
         {
@@ -103,20 +132,34 @@ namespace Auth.Service
             return await sqlCommand.GetCompanyInfoInDb(CompanyName);
         }
 
-        public async Task<User> CompanyIsExistsManager(string Login, string Password)
+        public async Task<User> GetCompanyManager(string Login, string Password)
         {
-            return await sqlCommand.CompanyIsExists(Login, Password);
+            return await sqlCommand.GetCompany(Login, Password);
         }
 
-        public async Task<UserClients> CompanyClientIsExistsManager(string Login, string Password)
+        public async Task<UserClients> GetCompanyClientManager(string Login, string Password)
         {
-            return await sqlCommand.CompanyClientIsExists(Login, Password);
+            return await sqlCommand.GetCompanyClient(Login, Password);
         }
-
 
         public async Task<String> isBookKeepingCompanyManager(string Login)
         {
             return await sqlCommand.isBookKeepingCompany(Login);
+        }
+
+        public async Task<Boolean> isArchivedManager(string Login, string Password)
+        {
+            return await sqlCommand.isArchived(Login, Password);
+        }
+
+        public async Task<Boolean> isArchivedUserClientsManager(string Login, string Password)
+        {
+            return await sqlCommand.isArchivedUserClients(Login, Password);
+        }
+
+        public async Task<Boolean> CompanyIsExistsManager(string Login)
+        {
+            return await sqlCommand.CompanyIsExists(Login);
         }
     }
 }

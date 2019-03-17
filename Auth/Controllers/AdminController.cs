@@ -19,7 +19,8 @@ namespace Auth.Controllers
         List<User> displayUsers;
         List<User> newUsers;
         List<User> list = new List<User>();
-        UsersArchive usersArchive;
+        
+        
 
         [HttpGet]
         public IActionResult Login()
@@ -50,8 +51,15 @@ namespace Auth.Controllers
         [Authorize]
         public IActionResult Index()
         {
-            displayUsers = db.Users.ToList();
-            return View(displayUsers);
+            if (User.Identity.Name == "Admin" || User.Identity.Name == "admin")
+            {
+                displayUsers = db.Users.ToList();
+                return View(displayUsers);
+            }
+            else
+            {
+                return RedirectToAction("Logout", "Account");
+            }
         }
 
         [HttpGet]
@@ -79,26 +87,26 @@ namespace Auth.Controllers
         }
 
         [HttpPost]
-
-        public IActionResult AddNewCompany(User user, string Login, string Password, string CompanyName, string OwnershipType, string Adress, string LegalAdress, int CheckingAccount, string BankBin, int UNP,
-            int OKPO, int ONPF, string FolderLanguage)
+        public async Task<IActionResult> AddNewCompany(User user, string Login, string Password, string CompanyName, string OwnershipType, string Adress, string LegalAdress, string CheckingAccount, string BankName, string BankBin, string UNP,
+            string OKPO, string ONPF, string FolderLanguage)
         {
-
-            if (string.IsNullOrEmpty(user.Login) || string.IsNullOrEmpty(user.Password))
-            {
-                ModelState.AddModelError("Login", "Вы не ввели поле");
-            }
-            else if (user.Login.Length < 5 || user.Login.Length > 15 || user.Password.Length < 5 || user.Password.Length > 15)
-            {
-                ModelState.AddModelError("Login", "Логин и/или пароль должны быть от 5 до 15 символов");
-            }
-
             if (ModelState.IsValid)
             {
-                managerAuth.AddNewCompanyInDb(Login, Password, CompanyName, OwnershipType, LegalAdress, Adress, CheckingAccount, BankBin, UNP, OKPO, ONPF, FolderLanguage);
-                ViewData["Successfull"] = "Компания успешно сохранена!";
+                bool flag = await managerAuth.CompanyIsExistsManager(Login);
+                if (flag == false)
+                {
+                    managerAuth.AddNewCompanyInDb(Login, Password, CompanyName, OwnershipType, LegalAdress, Adress, CheckingAccount, BankName, BankBin, UNP, OKPO, ONPF, FolderLanguage);
+                    ViewData["Successfull"] = "Компания успешно сохранена!";
+                }
+                else
+                {
+                    ViewData["Unsuccessfull"] = "Этот логин занят. Введите другой логин для компании.";
+                }
             }
-            else { ViewData["Successfull"] = "Ошибка"; }
+            else
+            {
+                ViewData["Successfull"] = "Ошибка";
+            }
             return View("AddNewCompany");
         }
 
@@ -107,38 +115,15 @@ namespace Auth.Controllers
         {
             managerAuth.DeleteAllUsersManager();
             return RedirectToAction("Index", "Admin");
-            //return View("Index");
         }
 
 
         [HttpPost]
-        public async Task<IActionResult> DeleteCompany(int id)
+        public async Task<IActionResult> ArchivingUnarchivingCompany(int id)
         {
-            //managerAuth.DeleteCompanyManager(Id);
-            //ViewBag.Message = "Form submitted.";
-
-            usersArchive = new UsersArchive();
-            usersArchive = await managerAuth.GetUserForArchivingManager(id);
-            managerAuth.AddCompanyToArchiveManager(usersArchive);
-            managerAuth.DeleteCompanyManager(id);
-
-
+            managerAuth.ArchivingUnarchivingManager(id);
             return RedirectToAction("Index", "Admin");
         }
 
-        public void Arhive(int id)
-        {
-
-        }
-
-        /*[HttpPost]
-        public async Task<IActionResult> Archiving(int Id)
-        {
-            usersArchive = new UsersArchive();
-            usersArchive = await managerAuth.GetUserForArchivingManager(Id);
-            managerAuth.AddCompanyToArchiveManager(usersArchive);
-            managerAuth.DeleteCompanyManager(Id);
-            return RedirectToAction("Index", "Admin");
-        }*/
     }
 }

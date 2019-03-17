@@ -12,6 +12,8 @@ namespace Auth.Service
     public class SqlCommand
     {
         ContextAuth contextAuth = null;
+        List<UserClients> userClientsList = null;
+        UserClients userClients = null;
 
         public SqlCommand()
         {
@@ -57,16 +59,61 @@ namespace Auth.Service
             }
         }
 
-        public async void AddCompanyToArchive(UsersArchive usersArchive)
+        public async void AddNewClientsInDb(UserClients userClients)
         {
-            if (usersArchive != null)
+            if (userClients != null)
             {
-                await contextAuth.UsersArchive.AddAsync(usersArchive);
+                await contextAuth.UserClients.AddAsync(userClients);
                 await contextAuth.SaveChangesAsync();
             }
         }
+        
+        public async void ArchivingUnarchiving(int id)
+        {
+            foreach (var item in contextAuth.Users)
+            {
+                if (item.Id == id)
+                {
+                    switch (item.isArchived)
+                    { 
+                        case true:
+                            item.isArchived = false;
+                            break;
+                        case false:
+                            item.isArchived = true;
+                            DateTime date = DateTime.Now;
+                            item.inArchive = date.ToString();
+                            break;
+                    }
+                }
+            }
+            await contextAuth.SaveChangesAsync();
+        }
 
+        public async void ArchivingUnarchivingUserClients(int id)
+        {
+            foreach (var item in contextAuth.UserClients)
+            {
+                if (item.Id == id)
+                {
+                    switch (item.isArchived)
+                    {
+                        case true:
+                            item.isArchived = false;
+                            break;
+                        case false:
+                            item.isArchived = true;
+                            DateTime date = DateTime.Now;
+                            item.inArchive = date.ToString();
+                            break;
+                    }
+                    break;
+                }
+            }
+            await contextAuth.SaveChangesAsync();
+        }
 
+        
         public async void AddUserClientsInDb(UserClients userClients)
         {
             if(userClients != null)
@@ -118,12 +165,11 @@ namespace Auth.Service
                     user.FolderLanguage = item.FolderLanguage;
                     break;
                 }
-                
             }
             return user;
         }
 
-        public async Task<User> CompanyIsExists(string Login, string Password)
+        public async Task<User> GetCompany(string Login, string Password)
         {
             User user = new User();
             foreach (var item in contextAuth.Users)
@@ -138,12 +184,12 @@ namespace Auth.Service
             return user;
         }
 
-        public async Task<UserClients> CompanyClientIsExists(string Login, string Password)
+        public async Task<UserClients> GetCompanyClient(string Login, string Password)
         {
             UserClients userClients = new UserClients();
             foreach (var item in contextAuth.UserClients)
             {
-                if (item.Login == Login && item.Password == Password) // дописать тут логику
+                if (item.Login == Login && item.Password == Password) 
                 {
                     userClients.Login = item.Login;
                     userClients.Password = item.Password;
@@ -151,6 +197,39 @@ namespace Auth.Service
                 }
             }
             return userClients;
+        }
+
+        public async Task<Boolean> CompanyIsExists(string Login)
+        {
+            bool flag = false;
+            foreach (var item in contextAuth.UserClients)
+            {
+                if (item.Login == Login)
+                {
+                    flag = true;
+                    break;
+                }
+                else
+                {
+                    flag = false;
+                }
+                
+            }
+
+            foreach (var item in contextAuth.Users)
+            {
+                if (item.Login == Login)
+                {
+                    flag = true;
+                    break;
+                }
+                else
+                {
+                    flag = false;
+                }
+
+            }
+            return flag;
         }
 
         public async Task<String> isBookKeepingCompany(string Login)
@@ -167,32 +246,68 @@ namespace Auth.Service
             return str;
         }
 
-        public async Task<UsersArchive> GetUserForArchiving(int id)
+        public List<UserClients> CompareToParentCompany(string AuthorizedName)
         {
-            UsersArchive usersArchive = new UsersArchive();
-            foreach (var item in contextAuth.Users)
+            userClientsList = new List<UserClients>();
+            foreach (var item in contextAuth.UserClients)
             {
-                if (item.Id == id)
-                {
-                    usersArchive.Login = item.Login;
-                    usersArchive.Password = item.Password;
-                    usersArchive.Archived = item.Date;
-                    usersArchive.CompanyName = item.CompanyName;
-                    usersArchive.OwnershipType = item.OwnershipType;
-                    usersArchive.Adress = item.Adress;
-                    usersArchive.LegalAdress = item.LegalAdress;
-                    usersArchive.CheckingAccount = item.CheckingAccount;
-                    usersArchive.BankBin = item.BankBin;
-                    usersArchive.UNP = item.UNP;
-                    usersArchive.OKPO = item.OKPO;
-                    usersArchive.ONPF = item.ONPF;
-                    usersArchive.FolderLanguage = item.FolderLanguage;
-                    break;
-                }
+               if (item.ParentCompany == AuthorizedName)
+               {
+                    userClients = new UserClients();
+                    userClients.Id = item.Id;
+                    userClients.Login = item.Login;
+                    userClients.Password = item.Password;
+                    userClients.Date = item.Date;
+                    userClients.CompanyName = item.CompanyName;
+                    userClients.isArchived = item.isArchived;
+                    userClients.inArchive = item.inArchive;
+                    userClientsList.Add(userClients);
+               }
 
             }
-            return usersArchive;
+            return userClientsList;
+        } 
+
+        public async Task<Boolean> isArchived(string Login, string Password)
+        {
+            bool flag = false;
+            foreach(var item in contextAuth.Users)
+            {
+                if (item.Login == Login && item.Password == Password)
+                {
+                    if (item.isArchived == true)
+                    {
+                        flag = true;
+                    }
+                    else
+                    {
+                        flag = false;
+                    }
+                }
+            }
+            return flag;
         }
+
+        public async Task<Boolean> isArchivedUserClients(string Login, string Password)
+        {
+            bool flag = false;
+            foreach (var item in contextAuth.UserClients)
+            {
+                if (item.Login == Login && item.Password == Password)
+                {
+                    if (item.isArchived == true)
+                    {
+                        flag = true;
+                    }
+                    else
+                    {
+                        flag = false;
+                    }
+                }
+            }
+            return flag;
+        }
+
 
     }
 }

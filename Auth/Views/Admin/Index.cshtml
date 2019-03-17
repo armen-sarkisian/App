@@ -36,39 +36,41 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @if (Model != null)
+                       @if (Model != null)
                         {
-                            int a = 1;
-                            @foreach (var item in Model)
+                        int a = 1;
+                           @foreach (var item in Model)
                             {
-                                <tr>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => a)
-                                    </td>
-                                    <td>
-                                        <form action="~/Admin/GetCompanyInfo" method="post">
-                                            <input type="submit" value="@item.CompanyName" name="companyName" style="border: none; background: none; width: auto; height: auto; color: black;" />
-                                        </form>
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Login)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Password)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Date)
-                                    </td>
-                                    @using (Html.BeginForm("DeleteCompany", "Admin", FormMethod.Post, new { @id = "Form1" }))
-                                    {
-                                        <td style="border-color: white; background-color: white">
-                                            <form action="~/Admin/DeleteCompany/" method="post">
-                                                <button type="submit" class="deleteCompanyBtn" title="Удалить текущую компанию" name="Id" value="@item.Id"><img src="~/images/deleteImg.png" class="deleteCompanyBtn" /></button>
-                                            </form>
-                                        </td>
-                                    }
-                                </tr>
-                                a++;
+                        <tr style="@(item.isArchived == true ? "color: gray" : "color: black")">
+                            <td>
+                                @Html.DisplayFor(modelItem => a)
+                            </td>
+                            <td>
+                                <form action="~/Admin/GetCompanyInfo" method="post">
+                                    <input type="submit" value="@item.CompanyName" title="@(item.isArchived == true ? "В архиве с: " + item.inArchive : "")" name="companyName" style="border: none; background: none; width: auto; height: auto;" />
+                                </form>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Login)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Password)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Date)
+                            </td>
+                            
+                            @using (Html.BeginForm("ArchivingUnarchivingCompany", "Admin", FormMethod.Post, new { @id = "Form1" }))
+                            {
+                                <td style="border-color: white; background-color: white">
+                                    <form action="~/Admin/ArchivingUnarchivingCompany/" method="post">
+                                        <button type="submit" class="deleteCompanyBtn" title="@(item.isArchived == true ? "Восстановить компанию из архива" : "Поместить компанию в архив")" name="Id" value="@item.Id"><img src="@(item.isArchived == true ? @Url.Content("~/images/restoreImg.JPG") : @Url.Content("~/images/deleteImg.png"))" class="deleteCompanyBtn"/></button>
+                                    </form>
+                                </td>
+                            }
+                            
+                        </tr>
+                            a++;
                             }
                         }
                     </tbody>
@@ -89,14 +91,14 @@
         <div id="buttonsBlock">
             <div style="text-align:left;">
                 <form action="~/Admin/DeleteAllUsers/" method="post">
-                    <input type="submit" class="btnAdd" style="position: absolute; top: 60px" value="Удалить все компании" />
+                    <input type="submit" class="btnAdd" style="position: absolute; top: 120px; visibility: hidden" value="Удалить все компании" />
                 </form>
             </div>
         </div>
     }
     <div id="buttonsBlock">
         <div style="text-align:left;">
-            <input type="button" class="btnAdd" style="position: absolute; top: 120px" value="Выход" onclick="window.location.href='@Url.Action("Logout", "Account")';" />
+            <input type="button" class="btnAdd" style="position: absolute; top: 60px;" value="Выход" onclick="window.location.href='@Url.Action("Logout", "Account")';" />
         </div>
     </div>
 
@@ -106,7 +108,7 @@
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 <script type="text/javascript">
     $("body").on("submit", "#Form1", function () {
-        return confirm("Вы действительно хотите удалить компанию?");
+        return confirm("Вы уверены?");
     });
 </script>
 
@@ -124,6 +126,10 @@
 <style>
     .idStyle {
         width: 10px;
+    }
+
+    .isArchived {
+        color: black;
     }
 
     #head {

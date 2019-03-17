@@ -4,45 +4,94 @@
 <html>
 
 <body>
-        <div class="aaa">
-            @ViewData["User"]
-        </div>
-        <h3>Ваши клиенты:</h3>
-        <div>
-            <div class="container, mainTable">
-                <div class="row">
-                    <div id="no-more-tables">
-                        <table class="col-md-12 table-bordered table-condensed cf">
+    <div class="AuthName, Header">
+        @ViewData["User"]
+    </div>
+    <h3 class="Header">Ваши клиенты:</h3>
+    <div>
+        <div class="container, mainTable">
+            <div class="row">
+                <div id="no-more-tables">
+                    <table class="col-md-12 table-bordered table-condensed cf">
+                        <thead class="cf">
+                            <tr>
+                                <th class="idStyle">
+                                    <h5>№</h5>
+                                </th>
+                                <th>
+                                    <h5>Имя клиента</h5>
+                                </th>
+                                <th>
+                                    <h5>Логин клиента</h5>
+                                </th>
+                                <th>
+                                    <h5>Пароль</h5>
+                                </th>
+                                <th>
+                                    <h5>Дата добавления</h5>
+                                </th>
 
-                            <tbody>
-                                @if (Model != null)
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null)
+                            {
+                                int a = 1;
+                                @foreach (var item in Model)
                                 {
-                                    int a = 1;
-                                    @foreach (var item in Model)
-                                    {
-                                        <tr>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => a)
+                                    <tr style="@(item.isArchived == true ? "color: gray" : "color: black")">
+                                        <td>
+                                            @Html.DisplayFor(modelItem => a)
+                                        </td>
+                                        <td title="@(item.isArchived == true ? "В архиве с: " + item.inArchive : "")">
+                                            @Html.DisplayFor(modelItem => item.CompanyName)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Login)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Password)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Date)
+                                        </td>
+                                        @using (Html.BeginForm("ArchivingUnarchivingUserClients", "BookKeepingCompany", FormMethod.Post, new { @id = "Form1" }))
+                                        {
+                                            <td style="border-color: white; background-color: white">
+                                                <form action="~/BookKeepingCompany/ArchivingUnarchivingUserClients/" method="post">
+                                                    <button type="submit" class="deleteCompanyBtn" title="@(item.isArchived == true ? "Восстановить компанию из архива" : "Поместить компанию в архив")" name="id" value="@item.Id"><img src="@(item.isArchived == true ? @Url.Content("~/images/restoreImg.JPG") : @Url.Content("~/images/deleteImg.png"))" class="deleteCompanyBtn" /></button>
+                                                </form>
                                             </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.CompanyName)
-                                        </tr>
-                                        a++;
-                                    }
+                                        }
+                                    </tr>
+                                    a++;
                                 }
-                            </tbody>
-                        </table>
-                    </div>
-
+                            }
+                        </tbody>
+                    </table>
                 </div>
+
             </div>
         </div>
-        <form method="post" action="~/Account/Logout/">
-            <input type="submit" class="btnInpSt" value="Выход" />
-        </form>
-        
+
+    </div>
+    <div id="buttonsBlock" style="text-align:left;">
+        <input type="button" class="btnAdd" style="position: absolute; top: 160px" value="Добавить нового клиента" onclick="window.location.href='@Url.Action("AddNewClient", "BookKeepingCompany")';" />
+    </div>
+    <div id="buttonsBlock" style="text-align:left;">
+        <input type="button" class="btnAdd" style="position: absolute; top: 220px" value="Выход" onclick="window.location.href='@Url.Action("Logout", "Account")';" />
+    </div>
+
 </body>
 </html>
+
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript">
+    $("body").on("submit", "#Form1", function () {
+        return confirm("Вы уверены?");
+    });
+</script>
 
 <style>
     .btnInpSt {
@@ -55,23 +104,41 @@
         left: 2px;
     }
 
-    .mainTable {
-        position: inherit;
-        margin-left: 20px;
-        width: 200px;
-        height: 650px;
+    .Header {
+        position: absolute;
+        top: 40px;
+        width: auto;
+        left: 540px;
     }
 
 
-    .btnAdd {
+    #buttonsBlock {
+        position: absolute;
+        top: 1px;
         width: 150px;
-        height: 30px;
+        left: 350px;
+        float: left;
+    }
+
+    .mainTable {
+        position: absolute;
+        width: 200px;
+        height: 650px;
+        left: 540px;
+        top: 150px;
+    }
+
+    .btnAdd {
+        white-space: normal;
+        width: 150px;
+        height: 50px;
         font-size: 15px;
         color: #0094ff;
     }
 
-    .aaa {
-        color: red;
+    .AuthName {
+        color: black;
+        font-size: 16px;
         font-style: italic;
     }
 
@@ -90,34 +157,14 @@
         left: 355px;
     }
 
-    #sidebar {
-        background-color: #eee;
-        float: left;
-        width: 250px;
-        height: 900px;
-        border: solid 1px black;
-        position: absolute;
-        top: 30px;
-        left: 150px;
-    }
-
-    #main {
-        background-color: #eee;
-        height: 695px;
-        width: 1340px;
-        position: absolute;
-        border: solid 1px black;
-        top: 30px;
-        left: 405px;
-    }
-
-    #footer {
-        background-color: #eee;
-        position: absolute;
-        height: 200px;
-        width: 1340px;
-        border: solid 1px black;
-        top: 730px;
-        left: 405px;
+    .deleteCompanyBtn {
+        background-image: url(/images/deleteImg.png);
+        background-color: transparent; /* make the button transparent */
+        background-repeat: no-repeat; /* make the background image appear only once */
+        background-position: 0px 0px; /* equivalent to 'top left' */
+        border: none; /* assuming we don't want any borders */
+        cursor: pointer; /* make the cursor like hovering over an <a> element */
+        height: 20px; /* make this the size of your image */
+        width: 20px; /* make this the size of your image */
     }
 </style>

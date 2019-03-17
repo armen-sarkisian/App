@@ -34,11 +34,10 @@ namespace Auth.Controllers
             }
             else
             {
-                //string nameForView = await GetUserNameForView();
-                //ViewData["User"] = "Вы вошли как: " + nameForView;
                 userClients = db.UserClients.ToList();
             }
-            return View(userClients);
+            //userClients поместить ниже во вью
+            return View();
         }
 
         
@@ -50,14 +49,15 @@ namespace Auth.Controllers
             return View();
         }
 
-        [HttpPost]
-        public IActionResult AddClientBtn(string CompanyName, string OwnershipType, string Adress, string LegalAdress, int CheckingAccount, string BankBin, int UNP,
+        //Это старый метод для добавления клиентов в главном окне
+        /*[HttpPost]
+        public IActionResult AddClientBtn(string CompanyName, string OwnershipType, string Adress, string LegalAdress, string CheckingAccount, string BankBin, int UNP,
             int OKPO, int ONPF, string FolderLanguage)
         {
             var parentCompany = User.Identity.Name;
             managerAuth.AddUserClientsInDb(CompanyName, OwnershipType, LegalAdress, Adress, CheckingAccount, BankBin, UNP, OKPO, ONPF, FolderLanguage, parentCompany);
             return View("AddClient");
-        }
+        }*/
 
         
     }

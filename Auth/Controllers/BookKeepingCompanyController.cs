@@ -24,16 +24,60 @@ namespace Auth.Controllers
         {
             await GetUserNameForView();
             ViewData["User"] = "Вы зашли в админку компаний как: " + name;
-            userClients = db.UserClients.ToList();
-            return View(userClients);
+            
+            
+            return View(CompareToParentCompany(User.Identity.Name));
         }
 
+        public List<UserClients> CompareToParentCompany(string AuthorizedName)
+        {
+            return managerAuth.CompareToParentCompanyManager(AuthorizedName);
+        }
 
         public async Task<String> GetUserNameForView()
         {
             User user = await managerAuth.GetUserNameForViewManager(User.Identity.Name);
             name = user.CompanyName.ToString();
             return name;
+        }
+
+        [HttpGet]
+        [Authorize]
+        public IActionResult AddNewClient()
+        {
+            return View("AddNewClient");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddNewClient(UserClients userClients, string Login, string Password, string CompanyName, string OwnershipType, string Adress, string LegalAdress, string CheckingAccount, string BankName, string BankBin, string UNP,
+            string OKPO, string ONPF, string FolderLanguage)
+        {
+
+            if (ModelState.IsValid)
+            {
+                bool flag = await managerAuth.CompanyIsExistsManager(Login);
+                if (flag == false)
+                {
+                    managerAuth.AddNewClientInDb(Login, Password, CompanyName, OwnershipType, LegalAdress, Adress, CheckingAccount, BankName, BankBin, UNP, OKPO, ONPF, FolderLanguage, User.Identity.Name);
+                    ViewData["Successfull"] = "Клиент успешно сохранен!";
+                }
+                else
+                {
+                    ViewData["Unsuccessfull"] = "Этот логин занят. Введите другой логин для клиента.";
+                }
+            }
+            else
+            {
+                ViewData["Successfull"] = "Ошибка";
+            }
+            return View("AddNewClient");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ArchivingUnarchivingUserClients(int id)
+        {
+            managerAuth.ArchivingUnarchivingUserClientsManager(id);
+            return RedirectToAction("AdminPanel", "BookKeepingCompany");
         }
 
     }
