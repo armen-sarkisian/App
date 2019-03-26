@@ -2,6 +2,9 @@
 
 <!DOCTYPE html>
 <html>
+@{
+
+}
 <head>
     <meta charset="utf-8">
     <title>Блочная верстка в HTML5</title>
@@ -18,7 +21,7 @@
                 <div class="row">
                     <div id="no-more-tables">
                         <table class="col-md-12 table-bordered table-condensed cf">
-                            
+
                             <tbody>
                                 @if (Model != null)
                                 {
@@ -31,7 +34,7 @@
                                             </td>
                                             <td>
                                                 @Html.DisplayFor(modelItem => item.CompanyName)
-                                            </tr>
+                                        </tr>
                                         a++;
                                     }
                                 }
@@ -53,15 +56,41 @@
 
     </div>
     <div id="main">
-
+        <div>
+            
+            <form action="~/Home/Back" method="post" >
+                <input type="submit" value="Назад" />
+            </form>
+            <form action="~/Home/GoToRoot" method="post">
+                <input type="submit" value="Попасть в корневую папку" />
+            </form>
+        </div>
+        <div>
+            
+            @if (ViewData["ChooseFolder"] != null)
+            {
+                @foreach (var item in (ViewData["ChooseFolder"] as string[]))
+                {
+                    int a = item.LastIndexOf("\\");
+                    string s = item.Substring(a + 1);
+                    <div class="column" style="background-color:#aaa;">
+                        <form action="~/Home/OpenFolder" method="post">
+                            <input type="submit" name="folder" value="@s" />
+                        </form>
+                    </div>
+                }
+             }
+                    
+        </div>
     </div>
     <div id="footer">
-        <input type="submit" id="sendMsg" class="btnInpSt top" value="Отправить уведомление в приложение" />
+        
         <input type="submit" id="cash" class="btnInpSt top" value="Зарплата" />
         <input type="submit" id="cash" class="btnInpSt top" value="Налоги" style="left: 455px" />
     </div>
 </body>
 </html>
+
 
 <style>
     .btnInpSt {
@@ -139,4 +168,16 @@
         top: 730px;
         left: 405px;
     }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    /* Create two equal columns that floats next to each other */
+    .column {
+        float: left;
+        width: auto;
+        padding: 10px;
+    }
+
 </style>

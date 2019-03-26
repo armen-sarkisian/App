@@ -36,7 +36,6 @@ namespace Auth
 
         public void ConfigureServices(IServiceCollection services)
         {
-
             // установка конфигурации подключения
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options => //CookieAuthenticationOptions
@@ -45,9 +44,10 @@ namespace Auth
                 });
          
             services.AddMvc();
+
         }
 
-     
+
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
@@ -59,6 +59,8 @@ namespace Auth
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
+                      
+
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

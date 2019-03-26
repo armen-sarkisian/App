@@ -8,6 +8,12 @@ using Auth.Models;
 using Microsoft.AspNetCore.Authorization;
 using Auth.Service;
 using Auth.DAO;
+using Microsoft.AspNetCore.Hosting.Server;
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
+using System.Collections;
+using System.Net.Http;
+using Auth.DAO.Model;
 
 namespace Auth.Controllers
 {
@@ -17,18 +23,24 @@ namespace Auth.Controllers
         private ContextAuth db = new ContextAuth();
         public string str { get; set; }
         public string user { get; set; }
+        public string webRootPath = "\\wwwroot";
+        string folder { get; set; }
+        static string[] dirs { get; set; }
+        static string fullPath { get; set; }
+        static string previousPath { get; set; }
+
+        
         List<UserClients> userClients = new List<UserClients>();
-        
-        
+
         [Authorize]
-        public async Task <IActionResult> Index()
+        public async Task<IActionResult> Index(string _folder, string _action)
         {
             string name = await managerAuth.isBookKeepingCompanyManager(User.Identity.Name);
             if (User.Identity.Name == "admin")
             {
                 return RedirectToAction("Logout", "Account");
             }
-            else if (User.Identity.Name == name) 
+            else if (User.Identity.Name == name)
             {
                 return RedirectToAction("AdminPanel", "BookKeepingCompany");
             }
@@ -36,12 +48,67 @@ namespace Auth.Controllers
             {
                 userClients = db.UserClients.ToList();
             }
-            //userClients поместить ниже во вью
+
+            
+            switch (_action)
+            {
+                case "Open":
+                    fullPath += "\\" + _folder;
+                    dirs = Directory.GetDirectories("wwwroot\\" + fullPath);
+                    break;
+                case "Back":
+                    int a = fullPath.LastIndexOf("\\");
+                    int b = fullPath.Length;
+                    fullPath = fullPath.Substring(0, a);
+                    dirs = Directory.GetDirectories("wwwroot\\" + fullPath);
+                    break;
+                case "GoToRoot":
+                    fullPath = null;
+                    dirs = Directory.GetDirectories("wwwroot");
+                    break;
+                default:
+                    dirs = Directory.GetDirectories("wwwroot");
+                    break;
+            }
+            ViewData["ChooseFolder"] = dirs;
+            ViewData["fullPath"] = fullPath;
+
+                 
+            /*foreach (var i in dirs)
+            {
+                int index = i.LastIndexOf("\\");
+                list.Add(i.Substring(index + 1));
+            }
+
+            /*foreach (string dir in Directory.GetDirectories(webRootPath, "*", SearchOption.AllDirectories))
+            {
+                if (Directory.GetFiles(dir, "*.png").Length > 0)
+                    picFolders.Add((Directory.GetFiles(dir, "*.png").ToString()));
+            }*/
+
+
             return View();
         }
 
-        
-       
+        [HttpPost]
+        public IActionResult OpenFolder(string folder)
+        {
+            return RedirectToAction("Index", "Home", new { _folder = folder, _action = "Open" });
+        }
+
+        [HttpPost]
+        public IActionResult Back()
+        {
+            return RedirectToAction("Index", "Home", new { _action = "Back" });
+        }
+
+        [HttpPost]
+        public IActionResult GoToRoot()
+        {
+            return RedirectToAction("Index", "Home", new { _action = "GoToRoot" });
+        }
+
+
         [HttpGet]
         [Authorize]
         public IActionResult AddClient() 
@@ -49,16 +116,5 @@ namespace Auth.Controllers
             return View();
         }
 
-        //Это старый метод для добавления клиентов в главном окне
-        /*[HttpPost]
-        public IActionResult AddClientBtn(string CompanyName, string OwnershipType, string Adress, string LegalAdress, string CheckingAccount, string BankBin, int UNP,
-            int OKPO, int ONPF, string FolderLanguage)
-        {
-            var parentCompany = User.Identity.Name;
-            managerAuth.AddUserClientsInDb(CompanyName, OwnershipType, LegalAdress, Adress, CheckingAccount, BankBin, UNP, OKPO, ONPF, FolderLanguage, parentCompany);
-            return View("AddClient");
-        }*/
-
-        
     }
 }

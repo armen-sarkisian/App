@@ -2,6 +2,7 @@
 
 @{
     ViewBag.Title = "Admin panel";
+    
 }
 <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 <link href="~/Css/BootstrapTableCss.css" rel="stylesheet" />
@@ -41,7 +42,7 @@
                         int a = 1;
                            @foreach (var item in Model)
                             {
-                        <tr style="@(item.isArchived == true ? "color: gray" : "color: black")">
+                            <tr style="@(item.isArchived == true ? "color: gray" : "color: black")">
                             <td>
                                 @Html.DisplayFor(modelItem => a)
                             </td>
