@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Web;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,6 +15,8 @@ using System.IO;
 using System.Collections;
 using System.Net.Http;
 using Auth.DAO.Model;
+using System.Net;
+using Microsoft.AspNetCore.Http;
 
 namespace Auth.Controllers
 {
@@ -26,14 +29,21 @@ namespace Auth.Controllers
         public string webRootPath = "\\wwwroot";
         string folder { get; set; }
         static string[] dirs { get; set; }
+        static string[] files { get; set; }
         static string fullPath { get; set; }
         static string previousPath { get; set; }
 
+        private IHostingEnvironment _env;
+
+        public HomeController (IHostingEnvironment env)
+        {
+            _env = env;
+        }
         
         List<UserClients> userClients = new List<UserClients>();
 
         [Authorize]
-        public async Task<IActionResult> Index(string _folder, string _action)
+        public async Task<IActionResult> Index(string _folder, string _action, string _file)
         {
             string name = await managerAuth.isBookKeepingCompanyManager(User.Identity.Name);
             if (User.Identity.Name == "admin")
@@ -48,44 +58,46 @@ namespace Auth.Controllers
             {
                 userClients = db.UserClients.ToList();
             }
-
             
+
             switch (_action)
             {
-                case "Open":
+                case "OpenFolder":
                     fullPath += "\\" + _folder;
                     dirs = Directory.GetDirectories("wwwroot\\" + fullPath);
+                    files = Directory.GetFiles("wwwroot\\" + fullPath);
                     break;
+                case "OpenFile":
+                    var webRoot = _env.WebRootPath;
+                    // Путь к файлу
+                    string file = System.IO.Path.Combine(webRoot + "\\" + fullPath, _file);
+                    // Тип файла - content-type
+                    string file_type = "application/txt";
+                    // Имя файла - необязательно
+                    string file_name = _file;
+                    return PhysicalFile(file, file_type, file_name);
+                    
                 case "Back":
                     int a = fullPath.LastIndexOf("\\");
                     int b = fullPath.Length;
                     fullPath = fullPath.Substring(0, a);
                     dirs = Directory.GetDirectories("wwwroot\\" + fullPath);
+                    files = Directory.GetFiles("wwwroot\\" + fullPath);
                     break;
                 case "GoToRoot":
                     fullPath = null;
                     dirs = Directory.GetDirectories("wwwroot");
+                    files = Directory.GetFiles("wwwroot\\" + fullPath);
                     break;
                 default:
                     dirs = Directory.GetDirectories("wwwroot");
+                    files = Directory.GetFiles("wwwroot\\" + fullPath);
                     break;
             }
+
             ViewData["ChooseFolder"] = dirs;
+            ViewData["Files"] = files;
             ViewData["fullPath"] = fullPath;
-
-                 
-            /*foreach (var i in dirs)
-            {
-                int index = i.LastIndexOf("\\");
-                list.Add(i.Substring(index + 1));
-            }
-
-            /*foreach (string dir in Directory.GetDirectories(webRootPath, "*", SearchOption.AllDirectories))
-            {
-                if (Directory.GetFiles(dir, "*.png").Length > 0)
-                    picFolders.Add((Directory.GetFiles(dir, "*.png").ToString()));
-            }*/
-
 
             return View();
         }
@@ -93,7 +105,13 @@ namespace Auth.Controllers
         [HttpPost]
         public IActionResult OpenFolder(string folder)
         {
-            return RedirectToAction("Index", "Home", new { _folder = folder, _action = "Open" });
+            return RedirectToAction("Index", "Home", new { _folder = folder, _action = "OpenFolder" });
+        }
+
+        [HttpPost]
+        public IActionResult OpenFile(string file)
+        {
+            return RedirectToAction("Index", "Home", new { _file = file, _action = "OpenFile" });
         }
 
         [HttpPost]
@@ -108,6 +126,7 @@ namespace Auth.Controllers
             return RedirectToAction("Index", "Home", new { _action = "GoToRoot" });
         }
 
+        
 
         [HttpGet]
         [Authorize]
