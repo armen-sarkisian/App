@@ -32,7 +32,7 @@ namespace Auth.Controllers
         static string[] files { get; set; }
         static string fullPath { get; set; }
         static string previousPath { get; set; }
-
+        public Dictionary<string, string> ext = new Dictionary<string, string>();
         private IHostingEnvironment _env;
 
         public HomeController (IHostingEnvironment env)
@@ -58,7 +58,6 @@ namespace Auth.Controllers
             {
                 userClients = db.UserClients.ToList();
             }
-            
 
             switch (_action)
             {
@@ -66,6 +65,7 @@ namespace Auth.Controllers
                     fullPath += "\\" + _folder;
                     dirs = Directory.GetDirectories("wwwroot\\" + fullPath);
                     files = Directory.GetFiles("wwwroot\\" + fullPath);
+                    getFileNameAndExtension();
                     break;
                 case "OpenFile":
                     var webRoot = _env.WebRootPath;
@@ -75,31 +75,50 @@ namespace Auth.Controllers
                     string file_type = "application/txt";
                     // Имя файла - необязательно
                     string file_name = _file;
+
                     return PhysicalFile(file, file_type, file_name);
-                    
+
                 case "Back":
                     int a = fullPath.LastIndexOf("\\");
                     int b = fullPath.Length;
                     fullPath = fullPath.Substring(0, a);
                     dirs = Directory.GetDirectories("wwwroot\\" + fullPath);
                     files = Directory.GetFiles("wwwroot\\" + fullPath);
+                    getFileNameAndExtension();
                     break;
                 case "GoToRoot":
                     fullPath = null;
                     dirs = Directory.GetDirectories("wwwroot");
                     files = Directory.GetFiles("wwwroot\\" + fullPath);
+                    getFileNameAndExtension();
                     break;
                 default:
                     dirs = Directory.GetDirectories("wwwroot");
                     files = Directory.GetFiles("wwwroot\\" + fullPath);
+                    getFileNameAndExtension();
                     break;
+
             }
 
-            ViewData["ChooseFolder"] = dirs;
+            ViewData["rootFolder"] = dirs;
             ViewData["Files"] = files;
             ViewData["fullPath"] = fullPath;
+            ViewBag.Ext = ext;
 
             return View();
+        }
+
+        public void getFileNameAndExtension()
+        {
+            FileInfo fileExtension;
+            foreach (var item in files)
+            {
+                fileExtension = new FileInfo(item);
+                string extension = fileExtension.Extension;
+                int a = item.LastIndexOf("\\");
+                string s = item.Substring(a + 1);
+                ext.Add(s, extension);
+            }
         }
 
         [HttpPost]
