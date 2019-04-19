@@ -1,0 +1,83 @@
+﻿@model Auth.DAO.Model.UserClientsEmployee
+
+
+<body>
+    <div style="width: 380px; position: absolute;">
+        <form action="~/Home/AddUserClientsEmployee" method="post">
+            <div class="validation" asp-validation-summary="ModelOnly"></div>
+            <h3>Добавление нового сотрудника</h3>
+            <br />
+            <div class="form-group">
+                <input type="text" class="input" asp-for="Login" name="Login" placeholder="Введите ваш логин" />
+                <span class="errors" asp-validation-for="Login"></span>
+            </div>
+            <div class="form-group">
+                <input type="text" class="input" asp-for="Password" name="Password" placeholder="Введите ваш пароль" style="top: 30px; width: 380px" />
+                <span class="errors" asp-validation-for="Password"></span>
+            </div>
+            <div class="form-group">
+                <input type="text" class="input" asp-for="SurnameNameFathersName" name="SurnameNameFathersName" placeholder="Укажите ваши ФИО" size="28" />
+                <span class="errors" asp-validation-for="SurnameNameFathersName"></span>
+            </div>
+            <div class="form-group">
+                <input type="text" class="input" asp-for="WorkPosition" name="WorkPosition" placeholder="Укажите вашу должность" size="28" />
+                <span class="errors" asp-validation-for="WorkPosition"></span>
+            </div>
+            <div class="form-group">
+                <select name="UsersType" class="input">
+                    <option disabled>Укажите вашу должность</option>
+                    <option>Руководитель</option>
+                    <option>Специалист</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <input type="text" class="input" asp-for="Phone" name="Phone" placeholder="Введите ваш телефон" size="28" />
+                <span class="errors" asp-validation-for="Phone"></span>
+            </div>
+            <div class="form-group">
+                <input type="text" class="input" asp-for="Email" name="Email" placeholder="Введите ваш Email" size="28" />
+                <span class="errors" asp-validation-for="Email"></span>
+            </div>
+
+            <div class="btnAdd" style="margin-top: 20px; margin-left: 210px; display: flex; ">
+
+                <input type="submit" style=" height: 30px;" value="Добавить" />
+                <input type="button" id="closeAddClientBtn" width: 100px" style="margin-left: 18px; white-space: normal" value="Отмена" onclick="window.location.href='@Url.Action("Index", "Home")';" />
+            </div>
+
+        </form>
+    </div>
+</body>
+
+
+@section scripts{
+
+    <environment names="Development">
+        <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+    </environment>
+    <environment names="Staging,Production">
+        <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.14.0/jquery.validate.min.js"
+                asp-fallback-src="~/lib/jquery-validation/dist/jquery.validate.min.js"
+                asp-fallback-test="window.jQuery && window.jQuery.validator">
+        </script>
+        <script src="https://ajax.aspnetcdn.com/ajax/jquery.validation.unobtrusive/3.2.6/jquery.validate.unobtrusive.min.js"
+                asp-fallback-src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"
+                asp-fallback-test="window.jQuery && window.jQuery.validator && window.jQuery.validator.unobtrusive">
+        </script>
+    </environment>
+}
+
+
+<style>
+
+    .errors {
+        font-size: 16px;
+        color: red;
+    }
+
+    .input {
+        width: 380px;
+    }
+</style>

@@ -1,10 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
+
 
 namespace Auth.Models
 {
@@ -72,6 +67,7 @@ namespace Auth.Models
         public bool isArchived { get; set; }
         public string inArchive { get; set; }
         public string ParentCompany { get; set; }
+        public string AccountType { get; set; }
     }
 
 }

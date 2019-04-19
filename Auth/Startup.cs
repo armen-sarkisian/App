@@ -21,6 +21,7 @@ namespace Auth
     public class Startup
     {
         AccountController acc;
+        HomeController hc;
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -44,6 +45,7 @@ namespace Auth
                 });
          
             services.AddMvc();
+            
 
         }
 

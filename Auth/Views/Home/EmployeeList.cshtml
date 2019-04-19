@@ -1,0 +1,88 @@
+﻿@model IEnumerable<Auth.DAO.Model.UserClientsEmployee>
+
+@{
+    ViewData["Title"] = "EmployeeList";
+}
+
+<body>
+    <div id="no-more-tables">
+        <table class="col-md-12 table-bordered table-striped table-condensed cf">
+            <thead class="cf">
+                <tr>
+                    <th style="width: 5px">
+                        <h5>№</h5>
+                    </th>
+                    <th style="width: 60px">
+                        <h5>Логин</h5>
+                    </th>
+                    <th style="width: 60px">
+                        <h5>Пароль</h5>
+                    </th>
+                    <th>
+                        <h5>Тип аккаунта</h5>
+                    </th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null)
+                {
+                    int a = 1;
+                    @foreach (var item in Model)
+                    {
+                        <tr style="@(item.isArchived == true ? "color: gray" : "color: black")">
+                        <td>
+                            @Html.DisplayFor(modelItem => a)
+                        </td>
+                        <td>
+                            <form action="~/Home/GetUsersInfo" method="post">
+                                <input type="submit" value="@item.Login" title="@(item.isArchived == true ? "В архиве с: " + item.inArchive : "")" name="Login" style="border: none; background: none; width: auto; height: auto;" />
+                            </form>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Password)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UsersType)
+                        </td>
+
+                        <td style="border-color: white; background-color: white">
+                            <form action="~/Home/ArchivingUnarchivingEmployee/" method="post">
+                                <button type="submit" class="deleteCompanyBtn" title="@(item.isArchived == true ? "Восстановить компанию из архива" : "Поместить компанию в архив")" name="Id" value="@item.Id"><img src="@(item.isArchived == true ? @Url.Content("~/images/restoreImg.JPG") : @Url.Content("~/images/deleteImg.png"))" class="deleteCompanyBtn" /></button>
+                            </form>
+                        </td>
+
+
+                        </tr>
+                        a++;
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+</body>
+
+
+@section Scripts {
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script type="text/javascript">
+    $("body").on("submit", "#Form1", function () {
+        return confirm("Вы уверены?");
+    });
+    </script>
+}
+
+<style>
+    .deleteCompanyBtn {
+        background-image: url(/images/deleteImg.png);
+        background-color: transparent; /* make the button transparent */
+        background-repeat: no-repeat; /* make the background image appear only once */
+        background-position: 0px 0px; /* equivalent to 'top left' */
+        border: none; /* assuming we don't want any borders */
+        cursor: pointer; /* make the cursor like hovering over an <a> element */
+        height: 20px; /* make this the size of your image */
+        width: 20px; /* make this the size of your image */
+    }
+</style>
+

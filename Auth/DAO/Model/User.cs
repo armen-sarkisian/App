@@ -66,5 +66,6 @@ namespace Auth.Models
         public string FolderLanguage { get; set; }
         public bool isArchived { get; set; }
         public string inArchive { get; set; }
+        public string AccountType { get; set; }
     }
 }

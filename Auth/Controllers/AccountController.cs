@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading;
 using System.Threading.Tasks;
 using Auth.DAO.Model;
 using Auth.Models;
@@ -36,10 +37,12 @@ namespace Auth.Controllers
                 {
                     User user = await managerAuth.GetCompanyManager(model.Email, model.Password);
                     UserClients userClients = await managerAuth.GetCompanyClientManager(model.Email, model.Password);
+                    UserClientsEmployee userClientsEmployee = await managerAuth.GetUserClientsEmployeeManager(model.Email, model.Password);
+
                     if (model.Email == "admin" && model.Password == "admin")
                     {
                         Admin admin = await managerAuth.GetUserAsyncAdmin(model.Email, model.Password);
-                        await Authenticate(model.Email);
+                        await Authenticate(model.Email, "null");
                         return RedirectToAction("Index", "Admin");
                     }
                     else if (model.Email == user.Login && model.Password == user.Password)
@@ -47,7 +50,7 @@ namespace Auth.Controllers
                         bool flag = await managerAuth.isArchivedManager(model.Email, model.Password);
                         if (flag == false)
                         {
-                            await Authenticate(model.Email); // аутентификация 
+                            await Authenticate(model.Email, user.AccountType); // аутентификация 
                             return RedirectToAction("AdminPanel", "BookKeepingCompany");
                         }
                         else
@@ -60,13 +63,28 @@ namespace Auth.Controllers
                         bool flag = await managerAuth.isArchivedUserClientsManager(model.Email, model.Password);
                         if (flag == false)
                         {
-                            await Authenticate(model.Email); // аутентификация 
+                            await Authenticate(model.Email, userClients.AccountType); // аутентификация 
                             return RedirectToAction("Index", "Home");
                         }
                         else
                         {
                             ModelState.AddModelError("Error", "Вход запрещен администратором.");
                         }
+                    }
+                    else if (model.Email == userClientsEmployee.Login && model.Password == userClientsEmployee.Password)
+                    {
+                        /*bool flag = await managerAuth.isArchivedUserClientsManager(model.Email, model.Password);
+                        if (flag == false)
+                        {
+                            await Authenticate(model.Email); // аутентификация 
+                            return RedirectToAction("Index", "Home");
+                        }
+                        else
+                        {
+                            ModelState.AddModelError("Error", "Вход запрещен администратором.");
+                        }*/
+                        await Authenticate(model.Email, userClientsEmployee.AccountType); // аутентификация 
+                        return RedirectToAction("Index", "Home");
                     }
                     else
                     {
@@ -81,14 +99,15 @@ namespace Auth.Controllers
             return View(model);
         }
 
-        private async Task Authenticate(string userName)
+        private async Task Authenticate(string userName, string role)
         {
             
             var claims = new List<Claim>
             {
-                new Claim(ClaimsIdentity.DefaultNameClaimType, userName)
+                new Claim(ClaimsIdentity.DefaultNameClaimType, userName),
+                new Claim(ClaimTypes.Role, role)
             };
-           
+
             ClaimsIdentity id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));
         }

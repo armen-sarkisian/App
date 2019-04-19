@@ -17,11 +17,8 @@ namespace Auth.Controllers
         private ManagerAuth managerAuth = new ManagerAuth();
         private ContextAuth db = new ContextAuth();
         List<User> displayUsers;
-        List<User> newUsers;
         List<User> list = new List<User>();
         
-        
-
         [HttpGet]
         public IActionResult Login()
         {

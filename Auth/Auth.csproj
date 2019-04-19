@@ -6,17 +6,27 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\Примеры работ\**" />
+    <Content Remove="wwwroot\Примеры работ\**" />
+    <EmbeddedResource Remove="wwwroot\Примеры работ\**" />
+    <None Remove="wwwroot\Примеры работ\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="wwwroot\images\deleteImg.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="jQuery" Version="3.3.1" />
+    <PackageReference Include="jQuery.UI.Combined" Version="1.12.1" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\Примеры работ\Пример 1\Подпример1\" />
+    <Folder Include="App_Data\" />
+    <Folder Include="wwwroot\App_Data\" />
   </ItemGroup>
 
 </Project>

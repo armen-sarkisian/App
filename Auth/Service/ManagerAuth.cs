@@ -36,6 +36,11 @@ namespace Auth.Service
             return await sqlCommand.GetTotalUsersInDb(id);
         }
 
+        public List<UserClientsEmployee> GetEmployeeListManager(string ParentCompany)
+        {
+            return sqlCommand.GetEmployeeList(ParentCompany);
+        }
+
         public async void AddNewCompanyInDb(string Login, string Password, string CompanyName, string OwnershipType, string Adress, string LegalAdress, string CheckingAccount, string BankName, string BankBin, string UNP,
             string OKPO, string ONPF, string FolderLanguage)
         {
@@ -55,6 +60,7 @@ namespace Auth.Service
             user.OKPO = OKPO;
             user.ONPF = ONPF;
             user.FolderLanguage = FolderLanguage;
+            user.AccountType = "BookKeepingCompany";
             sqlCommand.AddNewCompanyInDb(user);
         }
 
@@ -78,38 +84,40 @@ namespace Auth.Service
             userClients.ONPF = ONPF;
             userClients.FolderLanguage = FolderLanguage;
             userClients.ParentCompany = ParentCompany;
+            userClients.AccountType = "Company";
             sqlCommand.AddNewClientsInDb(userClients);
         }
 
-
-        /*public async void AddUserClientsInDb(string CompanyName, string OwnershipType, string Adress, string LegalAdress, string CheckingAccount, string BankBin, string UNP,
-            string OKPO, string ONPF, string FolderLanguage, string ParentCompany)
+        public async void AddUserClientsEmployeeManager(string Login, string Password, string SurnameNameFathersName, string WorkPosition, string UsersType, string Phone, string Email, string ParentsCompanyName)
         {
-            UserClients userClients = new UserClients();
-            userClients.Adress = Adress;
-            userClients.CompanyName = CompanyName;
-            userClients.OwnershipType = OwnershipType;
-            userClients.LegalAdress = LegalAdress;
-            userClients.CheckingAccount = CheckingAccount;
-            userClients.BankBin = BankBin;
-            userClients.UNP = UNP;
-            userClients.OKPO = OKPO;
-            userClients.ONPF = ONPF;
-            userClients.FolderLanguage = FolderLanguage;
-            userClients.ParentCompany = ParentCompany;
-            sqlCommand.AddUserClientsInDb(userClients);
-        }*/
-
+            UserClientsEmployee userClientsEmployee = new UserClientsEmployee();
+            userClientsEmployee.Login = Login;
+            userClientsEmployee.Password = Password;
+            DateTime date = DateTime.Now;
+            userClientsEmployee.Date = date.ToString();
+            userClientsEmployee.SurnameNameFathersName = SurnameNameFathersName;
+            userClientsEmployee.WorkPosition = WorkPosition;
+            userClientsEmployee.UsersType = UsersType;
+            userClientsEmployee.Phone = Phone;
+            userClientsEmployee.Email = Email;
+            userClientsEmployee.ParentsCompanyName = ParentsCompanyName;
+            userClientsEmployee.AccountType = "Employee";
+            sqlCommand.AddUserClientsEmployeeInDb(userClientsEmployee);
+        }
 
         public List<UserClients> CompareToParentCompanyManager(string AuthorizedName)
         {
            return sqlCommand.CompareToParentCompany(AuthorizedName);
         }
 
-
         public async void ArchivingUnarchivingManager(int id)
         {
             sqlCommand.ArchivingUnarchiving(id);
+        }
+
+        public async void ArchivingUnarchivingEmployeeManager(int id)
+        {
+            sqlCommand.ArchivingUnarchivingEmployee(id);
         }
 
         public async void ArchivingUnarchivingUserClientsManager(int id)
@@ -126,7 +134,7 @@ namespace Auth.Service
         {
             sqlCommand.DeleteCompany(Id);
         }
-
+        
         public async Task<User> GetCompanyInfoManager(string CompanyName)
         {
             return await sqlCommand.GetCompanyInfoInDb(CompanyName);
@@ -141,6 +149,12 @@ namespace Auth.Service
         {
             return await sqlCommand.GetCompanyClient(Login, Password);
         }
+
+        public async Task<UserClientsEmployee> GetUserClientsEmployeeManager(string Login, string Password)
+        {
+            return await sqlCommand.GetUserClientsEmployee(Login, Password);
+        }
+
 
         public async Task<String> isBookKeepingCompanyManager(string Login)
         {
@@ -160,6 +174,36 @@ namespace Auth.Service
         public async Task<Boolean> CompanyIsExistsManager(string Login)
         {
             return await sqlCommand.CompanyIsExists(Login);
+        }
+
+        public async Task<Boolean> UserClientsEmployeeIsExistsManager(string Login)
+        {
+            return await sqlCommand.UserClientsEmployeeIsExists(Login);
+        }
+
+        public string UserClientsEmployeeIsExistsStringManager(string Login)
+        {
+            return sqlCommand.UserClientsEmployeeIsExistsString(Login);
+        }
+
+        public async Task<String> GetUserClientsNameManager(string Login)
+        {
+            return await sqlCommand.GetUserClientsName(Login);
+        }
+
+        public async Task<String> GetUserClientsCompanyNameManager(string Login)
+        {
+            return await sqlCommand.GetUserClientsCompanyName(Login);
+        }
+
+        public async Task<String> GetUserClientsEmployeeParentsNameManager(string Login)
+        {
+            return await sqlCommand.GetUserClientsEmployeeParentsName(Login);
+        }
+
+        public async Task<String> GetUserClientsEmployeeTypeManager(string login)
+        {
+            return await sqlCommand.GetUserClientsEmployeeType(login);
         }
     }
 }
