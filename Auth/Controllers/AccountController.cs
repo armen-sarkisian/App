@@ -73,18 +73,17 @@ namespace Auth.Controllers
                     }
                     else if (model.Email == userClientsEmployee.Login && model.Password == userClientsEmployee.Password)
                     {
-                        /*bool flag = await managerAuth.isArchivedUserClientsManager(model.Email, model.Password);
+                        bool flag = await managerAuth.isArchivedUserClientsManager(model.Email, model.Password);
                         if (flag == false)
                         {
-                            await Authenticate(model.Email); // аутентификация 
+                            await Authenticate(model.Email, userClientsEmployee.AccountType); // аутентификация 
                             return RedirectToAction("Index", "Home");
                         }
                         else
                         {
                             ModelState.AddModelError("Error", "Вход запрещен администратором.");
-                        }*/
-                        await Authenticate(model.Email, userClientsEmployee.AccountType); // аутентификация 
-                        return RedirectToAction("Index", "Home");
+                        }
+                        
                     }
                     else
                     {

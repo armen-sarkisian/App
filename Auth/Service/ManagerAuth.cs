@@ -115,7 +115,7 @@ namespace Auth.Service
             sqlCommand.ArchivingUnarchiving(id);
         }
 
-        public async void ArchivingUnarchivingEmployeeManager(int id)
+        public void ArchivingUnarchivingEmployeeManager(int id)
         {
             sqlCommand.ArchivingUnarchivingEmployee(id);
         }
@@ -191,9 +191,9 @@ namespace Auth.Service
             return await sqlCommand.GetUserClientsName(Login);
         }
 
-        public async Task<String> GetUserClientsCompanyNameManager(string Login)
+        public String GetUserClientsCompanyNameManager(string Login)
         {
-            return await sqlCommand.GetUserClientsCompanyName(Login);
+            return sqlCommand.GetUserClientsCompanyName(Login);
         }
 
         public async Task<String> GetUserClientsEmployeeParentsNameManager(string Login)
@@ -204,6 +204,11 @@ namespace Auth.Service
         public async Task<String> GetUserClientsEmployeeTypeManager(string login)
         {
             return await sqlCommand.GetUserClientsEmployeeType(login);
+        }
+
+        public void ChangeAccountTypeManager(int id)
+        {
+            sqlCommand.ChangeAccountType(id);
         }
     }
 }

@@ -256,10 +256,7 @@ namespace Auth.Controllers
             else
             {
                 IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
-                
-
             }
-
 
             return RedirectToAction("Index", "Home");
 
@@ -343,20 +340,25 @@ namespace Auth.Controllers
             return PartialView("Settings");
         }
 
-        public async Task<ActionResult> EmployeeList()
+        
+        public ActionResult EmployeeList(int id)
         {
-            string companyName = await managerAuth.GetUserClientsCompanyNameManager(User.Identity.Name);
-            
-            //Employee = managerAuth.GetEmployeeListManager(companyName);
+            string companyName = managerAuth.GetUserClientsCompanyNameManager(User.Identity.Name);
             Employee = db.UserClientsEmployee.Where(a => a.ParentsCompanyName.Contains(companyName)).ToList();
             return PartialView(Employee);
         }
 
         
-        public void ArchivingUnarchivingEmployee(int id)
+        public ActionResult ArchivingUnarchivingEmployee(int id)
         {
             managerAuth.ArchivingUnarchivingEmployeeManager(id);
-            
+            return RedirectToAction("EmployeeList", "Home");
+        }
+
+        public ActionResult ChangeAccountType(int no)
+        {
+            managerAuth.ChangeAccountTypeManager(no);
+            return RedirectToAction("EmployeeList", "Home");
         }
     }
 }

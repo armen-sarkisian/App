@@ -3,6 +3,28 @@
 @{
     ViewData["Title"] = "EmployeeList";
 }
+<head>
+    <script src="https://code.jquery.com/jquery-1.9.1.js"></script>
+    
+    <script type="text/javascript">
+        $(function () {
+            $('#ArchivingUnarchiving').click(function () {
+                var data = $(this).val();
+                $('#OpenEmployeeList').load('Home/ArchivingUnarchivingEmployee', { 'id': data });
+            });
+        });
+    </script>
+
+    <script type="text/javascript">
+        $(function () {
+            $('#ChangeAccountTypeBtn').click(function () {
+                var data2 = $(this).val();
+                $('#OpenEmployeeList').load('Home/ChangeAccountType', { 'no': data2 });
+            });
+        });
+    </script>
+
+</head>
 
 <body>
     <div id="no-more-tables">
@@ -31,27 +53,47 @@
                     @foreach (var item in Model)
                     {
                         <tr style="@(item.isArchived == true ? "color: gray" : "color: black")">
-                        <td>
-                            @Html.DisplayFor(modelItem => a)
-                        </td>
-                        <td>
-                            <form action="~/Home/GetUsersInfo" method="post">
-                                <input type="submit" value="@item.Login" title="@(item.isArchived == true ? "В архиве с: " + item.inArchive : "")" name="Login" style="border: none; background: none; width: auto; height: auto;" />
-                            </form>
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Password)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.UsersType)
-                        </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => a)
+                            </td>
+                            <td>
+                                <form action="~/Home/GetUsersInfo" method="post">
+                                    <input type="submit" value="@item.Login" title="@(item.isArchived == true ? "В архиве с: " + item.inArchive : "")" name="Login" style="border: none; background: none; width: auto; height: auto;" />
+                                </form>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Password)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.UsersType)
+                            </td>
 
-                        <td style="border-color: white; background-color: white">
-                            <form action="~/Home/ArchivingUnarchivingEmployee/" method="post">
-                                <button type="submit" class="deleteCompanyBtn" title="@(item.isArchived == true ? "Восстановить компанию из архива" : "Поместить компанию в архив")" name="Id" value="@item.Id"><img src="@(item.isArchived == true ? @Url.Content("~/images/restoreImg.JPG") : @Url.Content("~/images/deleteImg.png"))" class="deleteCompanyBtn" /></button>
-                            </form>
-                        </td>
+                            <td style="border-color: white; background-color: white">
+                                <form id="form">
+                                    <button type="button"
+                                            class="deleteCompanyBtn"
+                                            title="@(item.isArchived == true ? "Восстановить аккаунт сотрудника из архива" : "Поместить аккаунт сотрудника в архив")"
+                                            name="id"
+                                            id="ArchivingUnarchiving"
+                                            value="@item.Id">
+                                        <img src="@(item.isArchived == true ? @Url.Content("~/images/restoreImg.JPG") : @Url.Content("~/images/deleteImg.png"))" class="deleteCompanyBtn" />
+                                    </button>
 
+                                </form>
+                            </td>
+                            <td style="border-color: white; background-color: white">
+                                <form id="ChangeAccountType">
+                                    <button type="button"
+                                            class="deleteCompanyBtn"
+                                            title="@(item.UsersType == "Специалист" ? "Изменить тип аккаунта на руководителя" : "Изменить тип аккаунта на специалиста")"
+                                            name="ChangeAccountTypeId"
+                                            id="ChangeAccountTypeBtn"
+                                            value="@item.Id">
+                                        <img src="@Url.Content("~/images/ChangeAccountType.png")" class="deleteCompanyBtn" />
+                                    </button>
+
+                                </form>
+                            </td>
 
                         </tr>
                         a++;
@@ -60,18 +102,10 @@
             </tbody>
         </table>
     </div>
-
+    
 </body>
 
 
-@section Scripts {
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-    <script type="text/javascript">
-    $("body").on("submit", "#Form1", function () {
-        return confirm("Вы уверены?");
-    });
-    </script>
-}
 
 <style>
     .deleteCompanyBtn {

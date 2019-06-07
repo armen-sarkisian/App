@@ -437,7 +437,7 @@ namespace Auth.Service
             return companyName;
         }
 
-        public async Task<String> GetUserClientsCompanyName(string Login)
+        public String GetUserClientsCompanyName(string Login)
         {
             string companyName = "";
             foreach (var item in contextAuth.UserClients)
@@ -490,6 +490,28 @@ namespace Auth.Service
             }
 
             return ParentsName;
+        }
+
+        public async void ChangeAccountType(int id)
+        {
+            foreach (var item in contextAuth.UserClientsEmployee)
+            {
+                if (item.Id == id)
+                {
+                    switch (item.UsersType)
+                    {
+                        case "Специалист":
+                            item.UsersType = "Руководитель";
+                            break;
+                        case "Руководитель":
+                            item.UsersType = "Специалист";
+                            break;
+                    }
+                    break;
+                }
+                
+            }
+            await contextAuth.SaveChangesAsync();
         }
 
     }
