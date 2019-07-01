@@ -12,7 +12,7 @@
             @ViewData["AccountRole"]
             @ViewData["UserClientsEmployeeType"]
         </div>
-        <h3>Ваши клиенты:</h3>
+        
         <div>
             <div class="container, mainTable">
                 <div class="row">
@@ -43,10 +43,12 @@
         </div>
 
         <input type="submit" class="btnInpSt" value="Техподдержка" style="bottom: 40px" />
+
         @if (ViewData["AccountRole"].ToString() != "Employee")
         {
             <a class="btnInpSt" href="#AddNewEmployeePage" rel="modal:open" style="left: 55px; bottom: 200px">Добавить клиента</a>
         }
+
         <a class="btnInpSt" href="#SettingsPage" rel="modal:open" style="left: 75px; bottom: 80px">Настройки</a>
         <input type="submit" class="btnInpSt" value="Услуги" style="bottom: 120px" />
         <input type="submit" class="btnInpSt" value="Акции" style="bottom: 160px" />
@@ -142,15 +144,20 @@
 </html>
 
 @section Scripts {
-    <script>
+<script>
 
-        $(function () {
-            $("#OpenEmployeeList").load('Home/EmployeeList');
-        });
+    $(function () {
+        $("#OpenEmployeeList").load('Home/EmployeeList');
+    });
 
-        $(function () {
-            $("#AddNewEmployeePage").load('Home/AddNewEmployee');
-        });
+    $(function () {
+        $("#AddNewEmployeePage").load('Home/AddNewEmployee');
+       
+    });
+
+    
+        
+
 
 
     </script>
@@ -171,7 +178,7 @@
         <a class="@(ViewData["AccountRole"].ToString() != "Employee" ? "item-visible" : "item-hidden")" id="btnt" href="#OpenEmployeeList" rel="modal:open" style="left: 35px">Открыть список сотрудников</a>
     </div>
 
-    <div id="OpenEmployeeList" style="display: none; overflow: initial; "></div>
+    <div id="OpenEmployeeList" style="display: none; overflow: initial;"></div>
     <div id="AddNewEmployeePage" style="display: none; height: 450px; overflow: initial; "></div>
 
 }
